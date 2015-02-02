@@ -10,6 +10,8 @@
 	<string>ject</string>
 	<key>IDESourceControlProjectOriginsDictionary</key>
 	<dict>
+		<key>1AA8ACBA4EC6C68C815D0D1466E6786621A085E7</key>
+		<string>https://github.com/DeepDownCreativeStudio/Impulse.git</string>
 		<key>D1D22708F8C808F426521F0FD1BA6DD832E87E24</key>
 		<string>https://github.com/gamextar/ject.git</string>
 	</dict>
@@ -17,17 +19,27 @@
 	<string>ject.xcodeproj</string>
 	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
 	<dict>
-		<key>D1D22708F8C808F426521F0FD1BA6DD832E87E24</key>
+		<key>1AA8ACBA4EC6C68C815D0D1466E6786621A085E7</key>
 		<string>../..</string>
+		<key>D1D22708F8C808F426521F0FD1BA6DD832E87E24</key>
+		<string>../../../ject</string>
 	</dict>
 	<key>IDESourceControlProjectURL</key>
-	<string>https://github.com/gamextar/ject.git</string>
+	<string>https://github.com/DeepDownCreativeStudio/Impulse.git</string>
 	<key>IDESourceControlProjectVersion</key>
 	<integer>111</integer>
 	<key>IDESourceControlProjectWCCIdentifier</key>
-	<string>D1D22708F8C808F426521F0FD1BA6DD832E87E24</string>
+	<string>1AA8ACBA4EC6C68C815D0D1466E6786621A085E7</string>
 	<key>IDESourceControlProjectWCConfigurations</key>
 	<array>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>1AA8ACBA4EC6C68C815D0D1466E6786621A085E7</string>
+			<key>IDESourceControlWCCName</key>
+			<string>Impulse</string>
+		</dict>
 		<dict>
 			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
 			<string>public.vcs.git</string>

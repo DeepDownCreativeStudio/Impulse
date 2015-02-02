@@ -177,9 +177,9 @@
 								<key>IsRotated</key>
 								<true/>
 								<key>Locked</key>
-								<true/>
+								<false/>
 								<key>Opacity</key>
-								<real>1</real>
+								<real>0.0</real>
 								<key>Position</key>
 								<string>{237.27765798568726, 164.56740969419479}</string>
 								<key>Scale</key>

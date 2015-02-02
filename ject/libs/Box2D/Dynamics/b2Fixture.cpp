@@ -71,6 +71,8 @@ void b2Fixture::Destroy(b2BlockAllocator* allocator)
 	// The proxies must be destroyed before calling this.
 	b2Assert(m_proxyCount == 0);
 
+    if (!m_shape) {return;}
+    
 	// Free the proxy array.
 	int32 childCount = m_shape->GetChildCount();
 	allocator->Free(m_proxies, childCount * sizeof(b2FixtureProxy));

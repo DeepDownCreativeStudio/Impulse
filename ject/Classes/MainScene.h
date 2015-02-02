@@ -13,7 +13,7 @@
 #import "LevelHelperLoader.h"
 
 // HelloWorld Layer
-@interface mainScene : CCLayer
+@interface MainScene : CCLayer
 {
 	b2World* world;
     LHSprite* wall1;
@@ -35,8 +35,6 @@
 @property (nonatomic,strong)     NSMutableArray* arrStars;
 
 -(void) retrieveRequiredObjects;
--(void) setupCollisionHandling;
-// returns a Scene that contains the HelloWorld as the only child
 +(id) scene;
 
 @end

@@ -61,194 +61,188 @@ TargetParameters m_steelTarget;
 
 bool m_useWeldJoint = true;
 
-/*
- // enums that will be used as tags
- enum {
- 
- TAG_PLATAFORMA = 4,
- TAG_STATIC = 5,
- TAG_MALO2 = 8,
- TAG_SPRITE = 9,
- TAG_BUENO = 10,
- TAG_ESTRELLA = 11,
- TAG_META = 12,
- TAG_MALO = 13,
- TAG_CIRCULO = 14,
- TAG_REBOTE = 15,
- TAG_VENTILADOR = 16,
- TAG_PIVOT = 17,
- TAG_REVIVE = 18,
- TAG_LLAMA = 19,
- TAG_DESAPARECE = 44,
- TAG_JUNK = 255,
- 
- };
- 
- */
-
-static const float MIN_SCALE = 0.4;
-static const float MAX_SCALE = 1.5;
 
 @implementation GameScene
 
 +(id) scene
 {
-	
-    // 'scene' is an autorelease object.
     CCScene *scene = [CCScene node];
-    
-    // 'layer' is an autorelease object.
     GameScene *Gamelayer = [GameScene node];
-    
-    // add layer as a child to scene
     [scene addChild: Gamelayer z:1];
-
-
-    
     return scene;
     
 }
 
-// initialize your instance here
 -(id) init
 {
 	if( (self=[super init]))
 	{
         
         [super init];
-        
-		
-		//NSLog(@"GS %i", [self retainCount]);
-		
-        self.touchEnabled = YES;
-		firstRun = true;
-        
-		      
+
+
 		_winSize = [[CCDirector sharedDirector] winSize];
-		
-		//[[GameHUD sharedManager] setGame:self];
-		//game = self;
         
         
-
-        NSUserDefaults *currentDefaults = [NSUserDefaults standardUserDefaults];
-        NSData *data = [currentDefaults objectForKey:[NSString stringWithFormat:@"data"]];
         
-        if (data != nil)
-        {
-            NSMutableArray *arrayData = [NSKeyedUnarchiver unarchiveObjectWithData:data];
-            levelUsed = [[arrayData objectAtIndex:0] intValue];
-            levelHigh = [[arrayData objectAtIndex:1] intValue];
-        }
-        else
-        {
-            
-            NSMutableArray* starter = [[NSMutableArray alloc]init];
-            [starter addObject:[NSNumber numberWithInt:1]];
-            [starter addObject:[NSNumber numberWithInt:1]];
-            [[NSUserDefaults standardUserDefaults] setObject:[NSKeyedArchiver archivedDataWithRootObject:starter]
-                                                      forKey:[NSString stringWithFormat:@"data"]];
-            levelHigh = 1;
-            levelUsed = 1;
-            
-        }
+        [self levelInitialSetup];
+        [self circleMemoryPosition];
+        [self setUpVariablesToDefaultValue];
+        [self StartLevel:[NSString stringWithFormat:@"J%i",levelUsed]];
+        [self setUpBackground];
+        [self setUpKeys];
+        [self addGestureRecognizer];
         
-        //circulito
-
-       
-        NSData *dataMem = [currentDefaults objectForKey:[NSString stringWithFormat:@"memory"]];
-        
-        if (dataMem != nil)
-        {
-            NSMutableArray *arrayData = [NSKeyedUnarchiver unarchiveObjectWithData:dataMem];
-            memoryX = [[arrayData objectAtIndex:0] floatValue];
-            memoryY = [[arrayData objectAtIndex:1] floatValue];
-            repeat = [[arrayData objectAtIndex:2] intValue];
-        }
-        else
-        {
-            
-            NSMutableArray* starter = [[NSMutableArray alloc]init];
-            [starter addObject:[NSNumber numberWithFloat:-200]];
-            [starter addObject:[NSNumber numberWithFloat:-200]];
-            [starter addObject:[NSNumber numberWithInt:0]];
-            [[NSUserDefaults standardUserDefaults] setObject:[NSKeyedArchiver archivedDataWithRootObject:starter]
-                                                      forKey:[NSString stringWithFormat:@"memory"]];
-            
-            memoryX = -200;
-            memoryY = -200;
-            repeat = 0;
-        }
-        
-        NSLog(@"repeat es %i... %f,%f", repeat, memoryX,memoryY);
-        
-            
-        blockRemove = true;
-        locationMove = false;
-        fondoapplied = true;
-        
-        
-		[self StartLevel:[NSString stringWithFormat:@"J%i",levelUsed]];
-        
-
         
 		[self schedule: @selector(tick:)];
-		//[self schedule: @selector(segundos:) interval:0.1];
-		//[self setupCollisionHandling];
-        noSeguir = false;
         
-        keyCount = 0;
-        NSArray* keys = [lh spritesWithTag:TAG_KEY]; {
-            for (LHSprite* spr in keys) {
-                keyCount++;
-            }}
-        NSLog(@"total de llaves en este nivel = %i", keyCount);
-        
-        UISwipeGestureRecognizer *rightRecognizer = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(rightSwipeHandle:)];
-        rightRecognizer.direction = UISwipeGestureRecognizerDirectionRight;
-        [rightRecognizer setNumberOfTouchesRequired:2];
-        [[[CCDirector sharedDirector] view] addGestureRecognizer:rightRecognizer];
-        [rightRecognizer release];
-        
-        UISwipeGestureRecognizer *leftRecognizer = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(leftSwipeHandle:)];
-        leftRecognizer.direction = UISwipeGestureRecognizerDirectionLeft;
-        [leftRecognizer setNumberOfTouchesRequired:2];
-        [[[CCDirector sharedDirector] view]addGestureRecognizer:leftRecognizer];
-        [leftRecognizer release];
-        
-        UISwipeGestureRecognizer *downRecognizer = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(gotoLevelMenu)];
-        downRecognizer.direction = UISwipeGestureRecognizerDirectionDown;
-        [downRecognizer setNumberOfTouchesRequired:2];
-        [[[CCDirector sharedDirector] view]addGestureRecognizer:downRecognizer];
-        [downRecognizer release];
-        
-        
-        bg2 = [lh createSpriteWithName:@"bg" fromSheet:@"design" fromSHFile:@"design.pshs"];
-        bg2.uniqueName = [NSString stringWithFormat:@"bgw2"];
-        bg2.color = ccBLACKBLUE;
-        bg2.position = ccp ([self selfScreen].size.height / 2,160);
-        bg2.scaleX = [self selfScreen].size.height / 480;
-        bg2.zOrder = -510;
-        bg2.tag = 10;
-        
-        bg = [lh createSpriteWithName:@"bg" fromSheet:@"design" fromSHFile:@"design.pshs"];
-        bg.uniqueName = [NSString stringWithFormat:@"bgw"];
-        bg.position = ccp ([self selfScreen].size.height / 2,160);
-        bg.scaleX = [self selfScreen].size.height / 480;
-        bg.zOrder = -500;
-        bg.tag = 10;
-        
-        menu = [CCMenu menuWithItems:nil];
-		
-		
-		CCMenuItemImage *but = [CCMenuItemImage itemWithNormalImage:@"back.png" selectedImage:@"backps.png" target:self                                       selector:@selector(back)];
-        but.position = ccp (-215,136);
-		[menu addChild:but];
-        [self addChild:menu];
-         
-        
+
     }
 	return self;
+}
+
+- (void) setUpVariablesToDefaultValue {
+
+    self.touchEnabled = YES;
+    firstRun = true;
+    blockRemove = true;
+    locationMove = false;
+    fondoapplied = true;
+    noSeguir = false;
+    isPaused=FALSE;
+    TrackingArray =[[NSMutableArray alloc]init];
+    cocosAngle = 0;
+    self.rotation = 0;
+    Bolas=0;
+    Stars=0;
+    gano=false;
+    perdio=false;
+    portal=false;
+
+    locationMove = false;
+    teleportAllowed = true;
+    
+    shooting = false;
+    tiros = 0;
+    fuerza = 0;
+    MAXIMUM_NUMBER_OF_STEPS = 25;
+    cantidadDeTirosMaximo = 1;
+    
+}
+
+#pragma mark Initial Setup
+
+- (void) setUpKeys {
+
+    keyCount = 0;
+    NSArray* keys = [lh spritesWithTag:TAG_KEY]; {
+        for (LHSprite* spr in keys) {
+            spr = spr;
+            keyCount++;
+        }}
+
+}
+
+- (void) setUpBackground {
+
+    bg2 = [lh createSpriteWithName:@"bg" fromSheet:@"design" fromSHFile:@"design.pshs"];
+    bg2.uniqueName = [NSString stringWithFormat:@"bgw2"];
+    bg2.color = ccBLACKBLUE;
+    bg2.position = ccp ([self selfScreen].size.height / 2,160);
+    bg2.scaleX = [self selfScreen].size.height / 480;
+    bg2.zOrder = -510;
+    bg2.tag = 10;
+    
+    bg = [lh createSpriteWithName:@"bg" fromSheet:@"design" fromSHFile:@"design.pshs"];
+    bg.uniqueName = [NSString stringWithFormat:@"bgw"];
+    bg.position = ccp ([self selfScreen].size.height / 2,160);
+    bg.scaleX = [self selfScreen].size.height / 480;
+    bg.zOrder = -500;
+    bg.opacity = 120;
+    bg.tag = 10;
+    
+    menu = [CCMenu menuWithItems:nil];
+    
+    
+    CCMenuItemImage *but = [CCMenuItemImage itemWithNormalImage:@"back.png" selectedImage:@"backps.png" target:self                                       selector:@selector(back)];
+    but.position = ccp (-215,136);
+    [menu addChild:but];
+    [self addChild:menu];
+
+}
+
+- (void) addGestureRecognizer {
+
+    UISwipeGestureRecognizer *rightRecognizer = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(rightSwipeHandle:)];
+    rightRecognizer.direction = UISwipeGestureRecognizerDirectionRight;
+    [rightRecognizer setNumberOfTouchesRequired:2];
+    [[[CCDirector sharedDirector] view] addGestureRecognizer:rightRecognizer];
+    [rightRecognizer release];
+    
+    UISwipeGestureRecognizer *leftRecognizer = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(leftSwipeHandle:)];
+    leftRecognizer.direction = UISwipeGestureRecognizerDirectionLeft;
+    [leftRecognizer setNumberOfTouchesRequired:2];
+    [[[CCDirector sharedDirector] view]addGestureRecognizer:leftRecognizer];
+    [leftRecognizer release];
+    
+    UISwipeGestureRecognizer *downRecognizer = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(gotoLevelMenu)];
+    downRecognizer.direction = UISwipeGestureRecognizerDirectionDown;
+    [downRecognizer setNumberOfTouchesRequired:2];
+    [[[CCDirector sharedDirector] view]addGestureRecognizer:downRecognizer];
+    [downRecognizer release];
+}
+
+- (void) levelInitialSetup {
+
+    NSData *data = [[NSUserDefaults standardUserDefaults] objectForKey:[NSString stringWithFormat:@"data"]];
+    
+    if (data != nil)
+    {
+        NSMutableArray *arrayData = [NSKeyedUnarchiver unarchiveObjectWithData:data];
+        levelUsed = [[arrayData objectAtIndex:0] intValue];
+        levelHigh = [[arrayData objectAtIndex:1] intValue];
+    }
+    else
+    {
+        
+        NSMutableArray* starter = [[NSMutableArray alloc]init];
+        [starter addObject:[NSNumber numberWithInt:1]];
+        [starter addObject:[NSNumber numberWithInt:1]];
+        [[NSUserDefaults standardUserDefaults] setObject:[NSKeyedArchiver archivedDataWithRootObject:starter]
+                                                  forKey:[NSString stringWithFormat:@"data"]];
+        levelHigh = 1;
+        levelUsed = 1;
+        
+    }
+
+}
+
+- (void) circleMemoryPosition {
+
+    NSData *dataMem = [[NSUserDefaults standardUserDefaults] objectForKey:[NSString stringWithFormat:@"memory"]];
+    
+    if (dataMem != nil)
+    {
+        NSMutableArray *arrayData = [NSKeyedUnarchiver unarchiveObjectWithData:dataMem];
+        memoryX = [[arrayData objectAtIndex:0] floatValue];
+        memoryY = [[arrayData objectAtIndex:1] floatValue];
+        repeat = [[arrayData objectAtIndex:2] intValue];
+    }
+    else
+    {
+        
+        NSMutableArray* starter = [[NSMutableArray alloc]init];
+        [starter addObject:[NSNumber numberWithFloat:-200]];
+        [starter addObject:[NSNumber numberWithFloat:-200]];
+        [starter addObject:[NSNumber numberWithInt:0]];
+        [[NSUserDefaults standardUserDefaults] setObject:[NSKeyedArchiver archivedDataWithRootObject:starter]
+                                                  forKey:[NSString stringWithFormat:@"memory"]];
+        
+        memoryX = -200;
+        memoryY = -200;
+        repeat = 0;
+    }
+    
 }
 
 - (void) back
@@ -256,162 +250,19 @@ static const float MAX_SCALE = 1.5;
     if (noSeguir == false)
     {
         noSeguir = true;
-        [[CCDirector sharedDirector] replaceScene:[CCTransitionFade transitionWithDuration:0.5 scene:[mainScene node]]];
+        [[CCDirector sharedDirector] replaceScene:[CCTransitionFade transitionWithDuration:0.5 scene:[MainScene node]]];
         [[SimpleAudioEngine sharedEngine] playEffect:@"photo.mp3"];
     }
 }
 
-
-/*
- // Point conversion routines
- - (CGPoint)convertPoint:(CGPoint)point fromNode:(CCNode *)node {
- return [self convertToNodeSpace:[node convertToWorldSpace:point]];
- }
- - (CGPoint)convertPoint:(CGPoint)touchLocation toNode:(CCNode *)node {
- // do the inverse of the routine above
- // Where touchLocation is the result of what is called from the UIGestureRecognizer
- CGPoint newPos = [[CCDirector sharedDirector] convertToGL: touchLocation];
- newPos = [node convertToNodeSpace:newPos];
- return newPos;
- }*/
-
-// Zoom board
-
--(void) setupCollisionHandling {
-    
-    [lh useLevelHelperCollisionHandling];
-    
-
-    [lh registerBeginOrEndCollisionCallbackBetweenTagA:TAG_ARROW andTagB: TAG_LOST idListener:self selListener:
-     @selector(arrowLost:)];
-    
-    [lh registerBeginOrEndCollisionCallbackBetweenTagA:TAG_ARROW andTagB: DEFAULT_TAG idListener:self selListener:
-     @selector(tuck:)];
-    
-    
-}
-
-
-
-- (void) arrowLost:(LHContactInfo*)contact
-{
-    LHSprite* a = [contact spriteA];
-    if (tiros == cantidadDeTirosMaximo)
-    {
-        
-        if (a == following)
-        {
-        [self perdedor];
-        }
-    }
-    
-    
-    kill = following;
-    nowToKill = true;
-    following = cupido;
-    
-
-
-}
-
-
-
--(void)tuck:(LHContactInfo*)contact
-{
- 
-}
-
+#pragma mark StartLevel
 
 -(void) StartLevel:(NSString*) level
 {
 
 	NSLog(@"Iniciando Nivel:%@", level);
 	
-	isPaused=FALSE;
 
-    TrackingArray =[[NSMutableArray alloc]init];
-
-	cocosAngle = 0;
-	//[self setPosition:ccp(_origin.x,_origin.y)];
-	self.rotation = 0;
-	Bolas=0;
-	Stars=0;
-	gano=false;
-	perdio=false;
-	portal=false;
-	Tiempo = 0;
-	LevelScore = 0;
-	NewScore = 0;
-    
-	zoomed = false;
-	agujaSprite.rotation = 0;
-	Star1 = 0;
-	Star2 = 0;
-	Star3 = 0;
-	StarScore = 0;
-	mensaje = nil;
-	NewRecord = FALSE;
-    pocion = false;
-    spacer = true;
-    bubbleForce = false;
-    atrapadoEnBaloon = false;
-    locationMove = false;
-    teleportAllowed = true;
-    
-   
-    
-    shooting = false;
-    tiros = 0;
-    fuerza = 0;
-    MAXIMUM_NUMBER_OF_STEPS = 25;
-    
-    
-    cantidadDeTirosMaximo = 1;
-
-	//
-	//	ACTIONS
-	//
-	
-	
-	
-	if(firstRun == false)
-	{
-
-		
-		for (b2Body* body = world->GetBodyList(); body; body = body->GetNext())
-		{
-			if (body->GetUserData() != NULL)
-			{
-				CCSprite *sprite = (CCSprite *) body->GetUserData();
-				[self removeChild:sprite cleanup:YES];
-			}
-			world->DestroyBody(body);
-		}
-        
-		delete world;
-		world = NULL;
-		// delete _contactListener;
-		
-		[self removeAllChildrenWithCleanup:YES];
-		
-		
-		[[SimpleAudioEngine sharedEngine] resumeBackgroundMusic];
-        
-	}
-	else
-	{
-   	}
-    
-	
-	if (Nivel == 1  &&  gameData.selectedChapter == 1)
-	{
-        
-		//[[GameHUD sharedManager] showHelp];
-        
-	}
-	
-	firstRun = false;
-	
 	// Define the gravity vector.
 	b2Vec2 gravity;
 	gravity.Set(0.0f, -14.0f);
@@ -423,10 +274,9 @@ static const float MAX_SCALE = 1.5;
 	world = new b2World(gravity);
 	world->SetContinuousPhysics(true);
 
-	// Define the ground body.
 	b2BodyDef groundBodyDef;
 	
-	groundBodyDef.position.Set(0, 0); // bottom-left corner
+	groundBodyDef.position.Set(0, 0);
 
     lh = [[LevelHelperLoader alloc] initWithContentOfFile:level];
     
@@ -444,16 +294,10 @@ static const float MAX_SCALE = 1.5;
     offsetH = (_winSize.width/2/self.scale);
     offsetV = (_winSize.height/2/self.scale);
     
-    NSLog(@"ORIGIN X%f - Y%f             WIDTH:%f - HEIGHT: X%f", worldSize.origin.x,worldSize.origin.y,worldSize.size.width, worldSize.size.height);
-    
     _contactListener = new MyContactListener();
 	world->SetContactListener(_contactListener);
     
-
-    // LINEA DE TIRO
-    
     line1 = [CCSprite spriteWithFile:@"linea.png"];
-    //line1.visible = FALSE;
     line1.opacity = 200;
     [line1.texture setAntiAliasTexParameters];
     [line1 setAnchorPoint:ccp(0.0f, 0.5f)];
@@ -479,9 +323,6 @@ static const float MAX_SCALE = 1.5;
 
     waitingToStop = false;
     
-    
-    //cargando box
-
     box = [lh spriteWithUniqueName:@"box"];
     if (box!=nil) {
         NSLog(@"box existe");
@@ -504,45 +345,118 @@ static const float MAX_SCALE = 1.5;
 }
 
 
--(void) setBack: (NSString*) fondo
-{
-	
-	//NSLog(@"Seteando Fondo:%@", fondo);
-	superfondo = fondo;
-	[superfondo retain];
-	[myfondito setFondo:fondo];
-	
-}
 
-
--(void) setStars:(int)min :(int)mid :(int)max;
-{
-	
-	Star1 = min;
-	Star2 = mid;
-	Star3 = max;
-}
-
--(void) segundos: (ccTime) dt
-{
-	
-    Tiempo++;
-	
-}
-
--(void)afterStep
-{   
+-(void) first {
     
+    if (first) {return;}
+        
+        first = true;
+        
+        movedCircle  = [lh createSpriteWithName:@"memory" fromSheet:@"UntitledSheet" fromSHFile:@"items.pshs"];
+        movedCircle.color = ccBLUE;
+        movedCircle.opacity = 125;
+        movedCircle.visible = false;
+    
+    
+        for (LHSprite* spr in [lh spritesWithTag:TAG_INVISIBLE]) {
+            spr.opacity = 0;
+        }
+
+        for (LHSprite* spr in [lh spritesWithTag:DEFAULT_TAG]) {
+            spr.color = ccBLUE;
+            spr.opacity = 125;
+        }
+    
+        LHSprite*spr1 = [lh spriteWithUniqueName:@"arco"];
+        spr1.color = ccBLUE;
+        spr1.opacity = 125;
+        [spr1 transformScale:1];
+        
+        for (LHSprite* spr in [lh spritesWithTag:TAG_BROKEN]) {
+            spr.opacity = 100;
+        }
+        
+        for (LHSprite* spr in [lh spritesWithTag:TAG_TELEPORT]) {
+            puff = !puff;
+            CCParticleSystem* particleSystem;
+            NSString* str;
+            if (puff) {str = [NSString stringWithFormat:@"galaxy.plist"];}
+            else {str = [NSString stringWithFormat:@"galaxyout.plist"];}
+            
+            particleSystem = [CCParticleSystemQuad particleWithFile:str];
+            particleSystem.positionType = kCCPositionTypeGrouped;
+            particleSystem.position = spr.position;
+            particleSystem.scale = .25f;
+            
+            [self addChild: particleSystem z:100];
+            spr.opacity = 100;
+            spr.scale = .9f;
+            spr.color = ccBLACK;
+            
+            
+            if (puff) {
+                CCAction *fadeIn = [CCFadeTo actionWithDuration:0.35f opacity:120];
+                CCAction *fadeOut = [CCFadeTo actionWithDuration:0.35f opacity:50];
+                CCSequence *pulseSequence = [CCSequence actions:
+                                             [fadeIn copy],
+                                             [fadeOut copy],
+                                             nil];
+                CCRepeatForever *repeats = [CCRepeatForever actionWithAction:pulseSequence];
+                [spr runAction:repeats];
+            }
+            else {
+                CCAction *fadeIn = [CCFadeTo actionWithDuration:0.35f opacity:120];
+                CCAction *fadeOut = [CCFadeTo actionWithDuration:0.35f opacity:20];
+                CCAction *fadeIn2 = [CCFadeTo actionWithDuration:0.35f opacity:90];
+                CCAction *fadeOut2 = [CCFadeTo actionWithDuration:0.35f opacity:50];
+                CCSequence *pulseSequence = [CCSequence actions:
+                                             [fadeOut copy],
+                                             [fadeIn copy],
+                                             [fadeOut2 copy],
+                                             [fadeIn2 copy],
+                                             nil];
+                CCRepeatForever *repeats = [CCRepeatForever actionWithAction:pulseSequence];
+                [spr runAction:repeats];
+            }
+        }
+        
+        
+        for (LHSprite* spr in [lh spritesWithTag:TAG_KEY]) {
+            spr.color = ccBLACKBLUE;
+        }
+        
+        LHSprite * arrive = [lh spriteWithUniqueName:@"arrive"];
+        arrive.color = ccBLUE;
+        arrive.opacity = 125;
+        
+        for (LHBezier* bez in [lh allBeziers]) {
+            bez.visible = false;
+        }
+        NSLog(@"ext %f",[lh returnExtension]);
+        if ([lh returnExtension]==480) {
+            startupSequence = 1;
+        } else {
+            NSLog(@"startup = 0");
+            startupSequence = 0;
+            float ext = [lh returnExtension] *([self selfScreen].size.height/480);
+            
+            self.position = ccp(-(ext - [self selfScreen].size.height) + 1, self.position.y);
+        }
+    
+    
+}
+
+
+#pragma mark Contact
+
+-(void)afterStep {
     std::vector<b2Body *>toDestroy;
     std::vector<MyContact>::iterator pos;
 	
     for(pos = _contactListener->_contacts.begin(); pos != _contactListener->_contacts.end(); ++pos)
     {
         
-        if ((perdio) || (gano))
-        {
-            break;
-        }
+        if (perdio || gano) {break;}
         
         MyContact contact = *pos;
         
@@ -554,275 +468,289 @@ static const float MAX_SCALE = 1.5;
             LHSprite *spriteA = (LHSprite *) bodyA->GetUserData();
             LHSprite *spriteB = (LHSprite *) bodyB->GetUserData();
             
-            if (spriteB.tag == TAG_ARROW)
-            {
-                if(spriteA.tag == DEFAULT_TAG)
-            {
-                
-                if (repeatpoint.x == spriteB.position.x) {
+            if (spriteB.tag != TAG_ARROW) {break;}
+            
+            switch (spriteA.tag) {
+                case DEFAULT_TAG:
+                    [self defaultContactWithSprite:spriteA];
+                    break;
                     
-                    if (repeatAllow < 2) {
-                    repeatcounter++;
-                        repeatAllow = 10;
+                case TAG_KEY:
+                    [self keyContactWithSprite:spriteA];
+                    break;
                     
-                    }
+                case TAG_BROKEN:
+                    [self glassContactWithSprite:spriteA];
+                    break;
                     
-                }
-                else {
-                    repeatcounter = 0;
-                  
-                }
-                
-                if (repeatcounter == 3) {
-                    CCSprite* bobo = [CCSprite spriteWithFile:@"reset.png"];
-                    bobo.position = ccp(-self.position.x + [self selfScreen].size.height/2,160);
-                    [self addChild:bobo z:1000];
-                    bobo.opacity = 0;
-                    [bobo runAction:[CCFadeTo actionWithDuration:1.5 opacity:160]];
-                    resetbo = true;
-                }
-                repeatpoint = spriteB.position;
-                
-                if (tuckpass < 1) {
-                
-                if (!blackout) {
-                    for (LHSprite* spr in [lh spritesWithTag:DEFAULT_TAG]) {
-                        if (![spr.uniqueName isEqualToString:@"bg"]) {
-                            [spr runAction:[CCTintTo actionWithDuration:2 red:0 green:0 blue:50]];
-                        }
-                    }
-                    blackout = true;
-                }
-                
-                
-                
-                
-                CCParticleSystem* particleSystem;
-                particleSystem = [CCParticleSystemQuad particleWithFile:@"tuck.plist"];
-                particleSystem.positionType = kCCPositionTypeGrouped;
-                particleSystem.position = spriteB.position;
-                particleSystem.scale = .3f;
-                [self addChild: particleSystem z:100];
+                case TAG_TELEPORT:
+                    [self teleportContactWithSprite:spriteA];
+                    break;
                     
-                    
-                    
-                    [[SimpleAudioEngine sharedEngine] playEffect:@"acSound.mp3"];
-                    CCCallFuncO* selfdestroy = [CCCallFuncO actionWithTarget:particleSystem selector:@selector(removeFromParent) object:nil];
-                    CCScaleTo * wait = [CCScaleTo actionWithDuration:3 scale:1];
-                    CCSequence * seq = [CCSequence actionOne:wait two:selfdestroy];
-                    
-                    [particleSystem runAction:seq];
-                    
-                    tuckpass = 10;
-                    
-                    
-                    
-                    [spriteB stopAllActions];
-                    spriteB.opacity = 100;
-                    CCFadeTo* comein = [CCFadeTo actionWithDuration:.3 opacity:255];
-                    [spriteB runAction:comein];
-                    
-                    
-                    spriteA.opacity = 185;
-                    CCFadeTo* comeout = [CCFadeTo actionWithDuration:1 opacity:125];
-                    [spriteA runAction:comeout];
-                     
-                 
-                }
-                
-            }
-                
-                if(spriteA.tag == TAG_KEY)
-                {
-                    float bee = [spriteA body] -> GetGravityScale();
-                    
-                    if (bee!=278) {
-                    
-                        [[SimpleAudioEngine sharedEngine] playEffect:@"door.mp3"];
-                    keyCount = keyCount - 1;
-                        NSLog(@"key count = %i", keyCount);
-                    [spriteA body] -> SetGravityScale(278);
-                        spriteA.visible = false;
-                    if (keyCount == 0){
-                        
-                        
-                       LHSprite * arrive = [lh spriteWithUniqueName:@"arrive"];
-                        [arrive prepareAnimationNamed:@"unlock" fromSHScene:@"items.pshs"];
-                        [arrive playAnimation];
-                        
-                        for (b2Fixture* f = [arrive body]->GetFixtureList(); f; f = f->GetNext())
-                    
-                        { f -> SetSensor(YES);
-                            
-                        }
-                    }
-                    }
-                }
-                
-
-                
-                
-                
-                if(spriteA.tag == TAG_BROKEN)
-                {
-                    if (noSeguir == false) {
-float bee = [spriteA body] -> GetGravityScale();
-                        
-                        if (bee!=278) {
-                        [[SimpleAudioEngine sharedEngine] playEffect:@"broken.mp3"];
-                        [spriteA prepareAnimationNamed:@"broken" fromSHScene:@"broken.pshs"];
-                        [spriteA playAnimation];
-                            removeLater = spriteA;
-                            blockRemove = false;
-                        [spriteA body] -> SetGravityScale(278);
-                        
-                        }}}
-                if(spriteA.tag == TAG_TELEPORT)
-                {    if (noSeguir == false) {
-                    float g = [spriteA body] -> GetGravityScale();
-                    if (g != 0) {
-                        
-
-                        
-                    LHSprite* teleport;
-                    if ([spriteA.uniqueName isEqualToString:@"teleport1"]){
-                        
-                        teleport = [lh spriteWithUniqueName:@"teleport2"];
-                        NSLog(@"teleporting to 2, position %f, %f",[teleport position].x,[teleport position].y);
-                    }
-                    if ([spriteA.uniqueName isEqualToString:@"teleport2"]){
-                        
-                        teleport = [lh spriteWithUniqueName:@"teleport1"];
-                        NSLog(@"teleporting to 1, position %f, %f",[teleport position].x,[teleport position].y);
-                    }
-                    if ([spriteA.uniqueName isEqualToString:@"teleport3"]){
-                        
-                        teleport = [lh spriteWithUniqueName:@"teleport4"];
-                        NSLog(@"teleporting to 4, position %f, %f",[teleport position].x,[teleport position].y);
-                    }
-                    if ([spriteA.uniqueName isEqualToString:@"teleport4"]){
-                        
-                        teleport = [lh spriteWithUniqueName:@"teleport3"];
-                        NSLog(@"teleporting to 3, position %f, %f",[teleport position].x,[teleport position].y);
-                        }
-                        
-                        [teleport transformScale:1.2];
-                        [teleport runAction:[CCScaleTo actionWithDuration:.5 scale:1]];
-
-                    [teleport body] -> SetGravityScale(0);
-                    teleportAllowed = false;
-                    teleportPoint = teleport.position;
-                    
-                        
-                    [[SimpleAudioEngine sharedEngine] playEffect:@"beam.mp3"];
-                        
-                        
-                    [timerTeleportAllowed invalidate];
-                    timerTeleportAllowed = nil;
-                    timerTeleportAllowed = [[NSTimer scheduledTimerWithTimeInterval:.7 target:self selector:@selector(reactivate) userInfo:nil repeats:NO] retain];
-
-                        
-                        
-                    }}}
-                
-                if(spriteA.tag == TAG_WIN)
-                {
-                    if (noSeguir == false) {
-                    
+                case TAG_WIN: {
                     b2Fixture * fixture2 = contact.fixtureA;
                     bool canWin = fixture2 -> IsSensor();
-                    if (canWin) {
-                        
-                        if (timer==nil) {
-                            
-                            
-                            
-                            [[SimpleAudioEngine sharedEngine] playEffect:@"ganar.mp3"];
-                            LHSprite * arrive = [lh spriteWithUniqueName:@"arrive"];
-                            arrive.color = ccWHITE;
-                            CGPoint clep = ccpSub(arrive.position, following.position);
-                            float forced =  ccpToAngle(clep);
-                            clep = ccpForAngle(forced);
-                            b2Vec2 smooth (clep.x, clep.y);
-                            [arrive prepareAnimationNamed:@"win" fromSHScene:@"items.pshs"];
-                            [arrive playAnimation];
-                            
-                            [following body] -> SetGravityScale(0);
-                            noSeguir = true;
-                            [following body] -> SetLinearVelocity(.8 * smooth);
-                            
-                            timer = [[NSTimer scheduledTimerWithTimeInterval:.7 target:self selector:@selector(ganador) userInfo:nil repeats:NO] retain];
-                            
-                            
-                            
-                        }}
-                    else {
-                    
-                        CCParticleSystem* particleSystem;
-                        particleSystem = [CCParticleSystemQuad particleWithFile:@"tuck.plist"];
-                        particleSystem.positionType = kCCPositionTypeGrouped;
-                        particleSystem.position = spriteB.position;
-                        particleSystem.scale = .3f;
-                        
-                        
-                        [self addChild: particleSystem z:100];
-                        [[SimpleAudioEngine sharedEngine] playEffect:@"acSound.mp3"];
-                        CCCallFuncO* selfdestroy = [CCCallFuncO actionWithTarget:particleSystem selector:@selector(removeFromParent) object:nil];
-                        CCScaleTo * wait = [CCScaleTo actionWithDuration:3 scale:1];
-                        CCSequence * seq = [CCSequence actionOne:wait two:selfdestroy];
-                        
-                        [particleSystem runAction:seq];
-                        
-                        tuckpass = 10;
-                        
-                        
-                        [spriteB stopAllActions];
-                        spriteB.opacity = 100;
-                        CCFadeTo* comein = [CCFadeTo actionWithDuration:.3 opacity:255];
-                        CCTintTo* tinter = [CCTintTo actionWithDuration:.5 red:255 green:255 blue:255];
-                        spriteB.color = ccRED;
-                        [spriteB runAction:comein];
-                        [spriteB runAction:tinter];
-                    }
-                    
-                    
-                    }}
-
-                
-                if(spriteA.tag == TAG_LOST)
-                {
-                    following = cupido;
-                    [spriteB removeSelf];
-                    if (tiros == cantidadDeTirosMaximo) {
-                    
-                        CCSprite* bobo = [CCSprite spriteWithFile:@"reset.png"];
-                        bobo.position = ccp(-self.position.x + [self selfScreen].size.height/2,160);
-                        [self addChild:bobo z:1000];
-                        bobo.opacity = 0;
-                        [bobo runAction:[CCFadeTo actionWithDuration:1.5 opacity:160]];
-                        resetbo = true;
-                    
-                    }
+                    canWin? [self winContactWithSprite:spriteA] : [self falseWinContactWithSprite:spriteA];
+                    break;
                 }
+                    
+                default:
+                    break;
+            }
+        }
+    }
+}
+
+- (void) defaultContactWithSprite: (LHSprite*) spriteA {
+    LHSprite* spriteB = ball;
+    {
+        
+        if (repeatpoint.x == spriteB.position.x) {
+            
+            if (repeatAllow < 2) {
+                repeatcounter++;
+                repeatAllow = 10;
                 
             }
             
         }
+        else {
+            repeatcounter = 0;
+            
+        }
+        
+        if (repeatcounter == 3) {
+            CCSprite* bobo = [CCSprite spriteWithFile:@"reset.png"];
+            bobo.position = ccp(-self.position.x + [self selfScreen].size.height/2,160);
+            [self addChild:bobo z:1000];
+            bobo.opacity = 0;
+            [bobo runAction:[CCFadeTo actionWithDuration:1.5 opacity:160]];
+            resetbo = true;
+        }
+        repeatpoint = spriteB.position;
+        
+        if (tuckpass < 1) {
+            
+            if (!blackout) {
+                for (LHSprite* spr in [lh spritesWithTag:DEFAULT_TAG]) {
+                    if (![spr.uniqueName isEqualToString:@"bg"]) {
+                        [spr runAction:[CCTintTo actionWithDuration:2 red:0 green:0 blue:50]];
+                    }
+                }
+                blackout = true;
+            }
+            
+            
+            
+            
+            CCParticleSystem* particleSystem;
+            particleSystem = [CCParticleSystemQuad particleWithFile:@"tuck.plist"];
+            particleSystem.positionType = kCCPositionTypeGrouped;
+            particleSystem.position = spriteB.position;
+            particleSystem.scale = .3f;
+            [self addChild: particleSystem z:100];
+            
+            
+            
+            [[SimpleAudioEngine sharedEngine] playEffect:@"acSound.mp3"];
+            CCCallFuncO* selfdestroy = [CCCallFuncO actionWithTarget:particleSystem selector:@selector(removeFromParent) object:nil];
+            CCScaleTo * wait = [CCScaleTo actionWithDuration:3 scale:1];
+            CCSequence * seq = [CCSequence actionOne:wait two:selfdestroy];
+            
+            [particleSystem runAction:seq];
+            
+            tuckpass = 10;
+            
+            
+            
+            [spriteB stopAllActions];
+            spriteB.opacity = 100;
+            CCFadeTo* comein = [CCFadeTo actionWithDuration:.3 opacity:255];
+            [spriteB runAction:comein];
+            
+            
+            spriteA.opacity = 185;
+            CCFadeTo* comeout = [CCFadeTo actionWithDuration:1 opacity:125];
+            [spriteA runAction:comeout];
+            
+            
+        }
+        
+    }
+
+}
+
+- (void) keyContactWithSprite: (LHSprite*) spriteA {
+    LHSprite* spriteB = ball;
+    {
+        float bee = [spriteA body] -> GetGravityScale();
+        
+        if (bee!=278) {
+            
+            [[SimpleAudioEngine sharedEngine] playEffect:@"door.mp3"];
+            keyCount = keyCount - 1;
+            NSLog(@"key count = %i", keyCount);
+            [spriteA body] -> SetGravityScale(278);
+            spriteA.visible = false;
+            if (keyCount == 0){
+                
+                
+                LHSprite * arrive = [lh spriteWithUniqueName:@"arrive"];
+                [arrive prepareAnimationNamed:@"unlock" fromSHScene:@"items.pshs"];
+                [arrive playAnimation];
+                
+                for (b2Fixture* f = [arrive body]->GetFixtureList(); f; f = f->GetNext())
+                    
+                { f -> SetSensor(YES);
+                    
+                }
+            }
+        }
+    }
+}
+
+- (void) glassContactWithSprite: (LHSprite*) spriteA {
+    LHSprite* spriteB = ball;
+    {
+        if (noSeguir == false) {
+            float bee = [spriteA body] -> GetGravityScale();
+            
+            if (bee!=278) {
+                [[SimpleAudioEngine sharedEngine] playEffect:@"broken.mp3"];
+                [spriteA prepareAnimationNamed:@"broken" fromSHScene:@"broken.pshs"];
+                [spriteA playAnimation];
+                removeLater = spriteA;
+                blockRemove = false;
+                [spriteA body] -> SetGravityScale(278);
+                
+            }}}
+}
+
+- (void) teleportContactWithSprite: (LHSprite*) spriteA {
+    LHSprite* spriteB = ball;
+    {
+        if (noSeguir == false) {
+            float g = [spriteA body] -> GetGravityScale();
+            if (g != 0) {
+                
+                
+                
+                LHSprite* teleport;
+                if ([spriteA.uniqueName isEqualToString:@"teleport1"]){
+                    
+                    teleport = [lh spriteWithUniqueName:@"teleport2"];
+                    NSLog(@"teleporting to 2, position %f, %f",[teleport position].x,[teleport position].y);
+                }
+                if ([spriteA.uniqueName isEqualToString:@"teleport2"]){
+                    
+                    teleport = [lh spriteWithUniqueName:@"teleport1"];
+                    NSLog(@"teleporting to 1, position %f, %f",[teleport position].x,[teleport position].y);
+                }
+                if ([spriteA.uniqueName isEqualToString:@"teleport3"]){
+                    
+                    teleport = [lh spriteWithUniqueName:@"teleport4"];
+                    NSLog(@"teleporting to 4, position %f, %f",[teleport position].x,[teleport position].y);
+                }
+                if ([spriteA.uniqueName isEqualToString:@"teleport4"]){
+                    
+                    teleport = [lh spriteWithUniqueName:@"teleport3"];
+                    NSLog(@"teleporting to 3, position %f, %f",[teleport position].x,[teleport position].y);
+                }
+                
+                [teleport transformScale:1.2];
+                [teleport runAction:[CCScaleTo actionWithDuration:.5 scale:1]];
+                
+                [teleport body] -> SetGravityScale(0);
+                teleportAllowed = false;
+                teleportPoint = teleport.position;
+                
+                
+                [[SimpleAudioEngine sharedEngine] playEffect:@"beam.mp3"];
+                
+                
+                [timerTeleportAllowed invalidate];
+                timerTeleportAllowed = nil;
+                timerTeleportAllowed = [[NSTimer scheduledTimerWithTimeInterval:.7 target:self selector:@selector(reactivate) userInfo:nil repeats:NO] retain];
+                
+                
+                
+            }}}
+    
+}
+
+- (void) falseWinContactWithSprite: (LHSprite*) spriteA {
+    
+        LHSprite* spriteB = ball;
+    CCParticleSystem* particleSystem;
+    particleSystem = [CCParticleSystemQuad particleWithFile:@"tuck.plist"];
+    particleSystem.positionType = kCCPositionTypeGrouped;
+    particleSystem.position = spriteB.position;
+    particleSystem.scale = .3f;
+    
+    
+    [self addChild: particleSystem z:100];
+    [[SimpleAudioEngine sharedEngine] playEffect:@"acSound.mp3"];
+    CCCallFuncO* selfdestroy = [CCCallFuncO actionWithTarget:particleSystem selector:@selector(removeFromParent) object:nil];
+    CCScaleTo * wait = [CCScaleTo actionWithDuration:3 scale:1];
+    CCSequence * seq = [CCSequence actionOne:wait two:selfdestroy];
+    
+    [particleSystem runAction:seq];
+    
+    tuckpass = 10;
+    
+    
+    [spriteB stopAllActions];
+    spriteB.opacity = 100;
+    CCFadeTo* comein = [CCFadeTo actionWithDuration:.3 opacity:255];
+    CCTintTo* tinter = [CCTintTo actionWithDuration:.5 red:255 green:255 blue:255];
+    spriteB.color = ccRED;
+    [spriteB runAction:comein];
+    [spriteB runAction:tinter];
+
+}
+
+- (void) winContactWithSprite: (LHSprite*) spriteA {
+
+    if (noSeguir) {return;}
+    if (timer) {return;}
+    
+    timer = [[NSTimer scheduledTimerWithTimeInterval:.7 target:self selector:@selector(ganador) userInfo:nil repeats:NO] retain];
+    
+    [[SimpleAudioEngine sharedEngine] playEffect:@"ganar.mp3"];
+    LHSprite * arrive = [lh spriteWithUniqueName:@"arrive"];
+    arrive.color = ccWHITE;
+    CGPoint clep = ccpSub(arrive.position, following.position);
+    float forced =  ccpToAngle(clep);
+    clep = ccpForAngle(forced);
+    b2Vec2 smooth (clep.x, clep.y);
+    [arrive prepareAnimationNamed:@"win" fromSHScene:@"items.pshs"];
+    [arrive playAnimation];
+    
+    [following body] -> SetGravityScale(0);
+    noSeguir = true;
+    [following body] -> SetLinearVelocity(.8 * smooth);
+    
+}
+
+
+- (void) gameLost {
+
+    following = cupido;
+    [ball removeSelf];
+    if (tiros == cantidadDeTirosMaximo) {
+        
+        CCSprite* bobo = [CCSprite spriteWithFile:@"reset.png"];
+        bobo.position = ccp(-self.position.x + [self selfScreen].size.height/2,160);
+        [self addChild:bobo z:1000];
+        bobo.opacity = 0;
+        [bobo runAction:[CCFadeTo actionWithDuration:1.5 opacity:160]];
+        resetbo = true;
         
     }
     
-    
+}
 
-}
-    
--(void) reactivate
-{
-   
-    NSArray* keys = [lh spritesWithTag:TAG_TELEPORT]; {
-        for (LHSprite* spr in keys) {
-            [spr body] -> SetGravityScale(1);
-        }}
-}
+#pragma mark Update Actions
 
 -(void)step:(ccTime)dt
 {
@@ -850,23 +778,16 @@ float bee = [spriteA body] -> GetGravityScale();
     
     float dragConstant = 8.3f;
     
-    // FEDE
-    
-    
     if (tuckpass>0) {
         tuckpass--;
     }
     
-    //Iterate over the bodies in the physics world
 	for (b2Body* b = world->GetBodyList(); b; b = b->GetNext())
 	{
-		
         if ((perdio) || (gano))
         {
             break;
         }
-        
-
         
 		if (b->GetUserData() != NULL)
 		{
@@ -874,9 +795,7 @@ float bee = [spriteA body] -> GetGravityScale();
 			CCSprite *myActor = (CCSprite*)b->GetUserData();
             myActor.position = [LevelHelperLoader metersToPoints:b->GetPosition()];
             myActor.rotation = -1 * CC_RADIANS_TO_DEGREES(b->GetAngle());}}
-    
 
-    
     if (box!=nil) {
         CGRect rect2 = box.boundingBox;
         if (following.tag==1) {
@@ -912,9 +831,6 @@ float bee = [spriteA body] -> GetGravityScale();
         
         LHSprite* bg = [lh spriteWithUniqueName:@"bgw"];
             bg.opacity = 120 + (bg.opacity - 120) *.99f;
-    
-        
-        
         
     }
     
@@ -952,36 +868,14 @@ float bee = [spriteA body] -> GetGravityScale();
     {
  
        b2Body *arrowBody = following.body;
-    
-        b2Vec2 flightDirection = arrowBody->GetLinearVelocity();
-        float flightSpeed = flightDirection.Normalize();//normalizes and returns length
-        b2Vec2 pointingDirection = arrowBody->GetWorldVector( b2Vec2( 1, 0 ) );
-        float dot = b2Dot( flightDirection, pointingDirection );
-    
-        float dragForceMagnitude = (1 - dot) * flightSpeed * flightSpeed * dragConstant * arrowBody->GetMass();
-    
+
         b2Vec2 arrowTailPosition = arrowBody->GetWorldPoint( b2Vec2( -0, 0 ) );
-       /* arrowBody->ApplyForce( dragForceMagnitude * -flightDirection, arrowTailPosition );*/
-    
+      
         [self showTrackingPath: CGPointMake(arrowTailPosition.x*PTM_RATIO,arrowTailPosition.y*PTM_RATIO)];
     
-        if (ball != nil) {
-            float ext = [lh returnExtension] *([self selfScreen].size.height/480);
-            if (ball.position.x < [self selfScreen].size.height/2) {
-                self.position = ccp(0, self.position.y);
-            }
-            else if (ball.position.x > ext - [self selfScreen].size.height/2) {
-                self.position = ccp(-(ext - [self selfScreen].size.height), self.position.y);
-            }
-            else {
-            self.position = ccp(-ball.position.x+ [self selfScreen].size.height/2, self.position.y);
-            }
-            [bg transformPosition:ccp(-self.position.x + [self selfScreen].size.height/2, bg.position.y)];
-            [bg2 transformPosition:ccp(-self.position.x + [self selfScreen].size.height/2, bg.position.y)];
-            [menu setPosition:ccp(-self.position.x + [self selfScreen].size.height/2, menu.position.y)];
-        }
+        [self checkBall];
         
-}
+    }
     if (startupSequence == 0) {
         
         float speed;
@@ -1000,21 +894,53 @@ float bee = [spriteA body] -> GetGravityScale();
         if (self.position.x > -2) {self.position = ccp (0, self.position.y);
             startupSequence = 1;
         }
-        
-        [bg transformPosition:ccp(-self.position.x + [self selfScreen].size.height/2, bg.position.y)];
-        [bg2 transformPosition:ccp(-self.position.x + [self selfScreen].size.height/2, bg.position.y)];
-        [menu setPosition:ccp(-self.position.x + [self selfScreen].size.height/2, menu.position.y)];
     
     }
-    
+    [self moveBackground];
     [self first];
     
 }
 
-- (void) stepIn {
-    
+- (void) moveBackground {
 
     
+   // [bg transformPosition:ccp(-self.position.x + [self selfScreen].size.height/2, bg.position.y)];
+   // [bg2 transformPosition:ccp(-self.position.x + [self selfScreen].size.height/2, bg.position.y)];
+    [menu setPosition:ccp(-self.position.x + [self selfScreen].size.height/2, menu.position.y)];
+
+}
+- (void) checkBall {
+    
+    if (ball) {
+        float ext = [lh returnExtension] *([self selfScreen].size.height/480);
+        if (ball.position.x < [self selfScreen].size.height/2) {
+            self.position = ccp(0, self.position.y);
+        }
+        else if (ball.position.x > ext - [self selfScreen].size.height/2) {
+            self.position = ccp(-(ext - [self selfScreen].size.height), self.position.y);
+        }
+        else {
+            self.position = ccp(-ball.position.x+ [self selfScreen].size.height/2, self.position.y);
+        }
+        
+        NSLog(@"ball.x %f, y %f", ball.position.x, ball.position.y);
+        
+        BOOL bottomLost = ball.position.y<0;
+        BOOL leftLost = ball.position.x<0;
+        BOOL topLost = ball.position.y>[self selfScreen].size.width;
+        BOOL rightLost = ball.position.x > ext;
+        if (bottomLost||leftLost||topLost||rightLost) {
+            [self gameLost];
+        }
+        
+    }
+    
+    
+    
+    
+}
+
+- (void) stepIn {
     
     if (!off) {
     CCAction *fadeIn = [CCFadeTo actionWithDuration:0.35f opacity:230];
@@ -1064,98 +990,7 @@ float bee = [spriteA body] -> GetGravityScale();
     }
 }
 
--(void) first {
-    if (!first) {
-        
-        movedCircle  = [lh createSpriteWithName:@"memory" fromSheet:@"UntitledSheet" fromSHFile:@"items.pshs"];
-        movedCircle.color = ccBLUE;
-        movedCircle.opacity = 125;
-        movedCircle.visible = false;
-        first = true;
-        for (LHSprite* spr in [lh spritesWithTag:DEFAULT_TAG]) {
-            if (![spr.uniqueName isEqualToString:@"bg"]) {
-            spr.color = ccBLUE;
-                spr.opacity = 125;
-            }
-        }
-            LHSprite*spr1 = [lh spriteWithUniqueName:@"arco"];
-            spr1.color = ccBLUE;
-            spr1.opacity = 125;
-            [spr1 transformScale:1];
-        
-        for (LHSprite* spr in [lh spritesWithTag:TAG_BROKEN]) {
-            spr.opacity = 100;
-        }
-        
-        for (LHSprite* spr in [lh spritesWithTag:TAG_TELEPORT]) {
-            puff = !puff;
-        CCParticleSystem* particleSystem;
-            NSString* str;
-            if (puff) {str = [NSString stringWithFormat:@"strange.plist"];}
-            else {str = [NSString stringWithFormat:@"strange2.plist"];}
-            
-        particleSystem = [CCParticleSystemQuad particleWithFile:str];
-        particleSystem.positionType = kCCPositionTypeGrouped;
-        particleSystem.position = spr.position;
-        particleSystem.scale = .25f;
-            
-        [self addChild: particleSystem z:100];
-            spr.opacity = 100;
-            spr.scale = .9f;
-            spr.color = ccBLACK;
-            
-            
-            if (puff) {
-            CCAction *fadeIn = [CCFadeTo actionWithDuration:0.35f opacity:120];
-            CCAction *fadeOut = [CCFadeTo actionWithDuration:0.35f opacity:50];
-            CCSequence *pulseSequence = [CCSequence actions:
-                                         [fadeIn copy],
-                                         [fadeOut copy],
-                                         nil];
-            CCRepeatForever *repeats = [CCRepeatForever actionWithAction:pulseSequence];
-            [spr runAction:repeats];
-            }
-            else {
-                CCAction *fadeIn = [CCFadeTo actionWithDuration:0.35f opacity:120];
-                CCAction *fadeOut = [CCFadeTo actionWithDuration:0.35f opacity:20];
-                CCAction *fadeIn2 = [CCFadeTo actionWithDuration:0.35f opacity:90];
-                CCAction *fadeOut2 = [CCFadeTo actionWithDuration:0.35f opacity:50];
-                CCSequence *pulseSequence = [CCSequence actions:
-                                             [fadeOut copy],
-                                             [fadeIn copy],
-                                             [fadeOut2 copy],
-                                             [fadeIn2 copy],
-                                             nil];
-                CCRepeatForever *repeats = [CCRepeatForever actionWithAction:pulseSequence];
-                [spr runAction:repeats];
-            }
-        }
-        
-        
-        for (LHSprite* spr in [lh spritesWithTag:TAG_KEY]) {
-            spr.color = ccBLACKBLUE;
-        }
-        
-        LHSprite * arrive = [lh spriteWithUniqueName:@"arrive"];
-        arrive.color = ccBLUE;
-        arrive.opacity = 125;
-        
-        for (LHBezier* bez in [lh allBeziers]) {
-            bez.visible = false;
-        }
-        NSLog(@"ext %f",[lh returnExtension]);
-        if ([lh returnExtension]==480) {
-            startupSequence = 1;
-        } else {
-            NSLog(@"startup = 0");
-            startupSequence = 0;
-            float ext = [lh returnExtension] *([self selfScreen].size.height/480);
-            
-            self.position = ccp(-(ext - [self selfScreen].size.height) + 1, self.position.y);
-        }
-    }
-}
-
+#pragma mark End Level
 
 -(void) perdedor
 {
@@ -1246,14 +1081,6 @@ float bee = [spriteA body] -> GetGravityScale();
         
     }
     
-    
-    
-    
-    
-    
-    
-    
-    
     noSeguir = true;
     [timer invalidate];
     timer = nil;
@@ -1261,65 +1088,6 @@ float bee = [spriteA body] -> GetGravityScale();
 }
 
 
-- (void)leftSwipeHandle:(UISwipeGestureRecognizer*)gestureRecognizer  {
-    if (noSeguir == false) {
-        
-    if (levelUsed != levelHigh) {
-    [[CCDirector sharedDirector] replaceScene:[CCTransitionFade transitionWithDuration:0.4 scene:[GameScene scene] withColor:ccWHITE]];
-        [[SimpleAudioEngine sharedEngine] playEffect:@"ganar.mp3"];
-        NSMutableArray* starter = [[NSMutableArray alloc]init];
-        [starter addObject:[NSNumber numberWithInt:levelUsed + 1]];
-        NSLog(@"next level");
-        [starter addObject:[NSNumber numberWithInt:levelHigh]];
-        
-        
-        [[NSUserDefaults standardUserDefaults] setObject:[NSKeyedArchiver archivedDataWithRootObject:starter]
-                                                  forKey:[NSString stringWithFormat:@"data"]];
-        
-        NSMutableArray* starter2 = [[NSMutableArray alloc]init];
-        [starter2 addObject:[NSNumber numberWithFloat:0]];
-        [starter2 addObject:[NSNumber numberWithFloat:0]];
-        [starter2 addObject:[NSNumber numberWithInt:0]];
-        [[NSUserDefaults standardUserDefaults] setObject:[NSKeyedArchiver archivedDataWithRootObject:starter2]
-                                                  forKey:[NSString stringWithFormat:@"memory"]];
-        
-        noSeguir = true;
-        [timer invalidate];
-        timer = nil;
-        [[CCDirector sharedDirector] replaceScene:[CCTransitionFade transitionWithDuration:0.4 scene:[GameScene scene] withColor:ccWHITE]];
-        
-        
-    } else {[self perdedor];}
-    
-}}
-
-
-- (void)rightSwipeHandle:(UISwipeGestureRecognizer*)gestureRecognizer  {if (noSeguir == false) {
-    if (levelUsed != 1) {
-        
-        [[CCDirector sharedDirector] replaceScene:[CCTransitionFade transitionWithDuration:0.4 scene:[GameScene scene] withColor:ccWHITE]];
-        [[SimpleAudioEngine sharedEngine] playEffect:@"ganar.mp3"];
-        NSMutableArray* starter = [[NSMutableArray alloc]init];
-        [starter addObject:[NSNumber numberWithInt:levelUsed - 1]];
-        NSLog(@"previous level");
-        [starter addObject:[NSNumber numberWithInt:levelHigh]];
-        [[NSUserDefaults standardUserDefaults] setObject:[NSKeyedArchiver archivedDataWithRootObject:starter]
-                                                  forKey:[NSString stringWithFormat:@"data"]];
-        
-        NSMutableArray* starter2 = [[NSMutableArray alloc]init];
-        [starter2 addObject:[NSNumber numberWithFloat:0]];
-        [starter2 addObject:[NSNumber numberWithFloat:0]];
-        [starter2 addObject:[NSNumber numberWithInt:0]];
-        [[NSUserDefaults standardUserDefaults] setObject:[NSKeyedArchiver archivedDataWithRootObject:starter2]
-                                                  forKey:[NSString stringWithFormat:@"memory"]];
-        
-        noSeguir = true;
-        [timer invalidate];
-        timer = nil;
-        [[CCDirector sharedDirector] replaceScene:[CCTransitionFade transitionWithDuration:0.4 scene:[GameScene scene] withColor:ccWHITE]];
-    } else {[self perdedor];}
-    
-}}
 
 
 
@@ -1333,6 +1101,8 @@ float bee = [spriteA body] -> GetGravityScale();
 }
 
 
+#pragma mark Tracking Path
+
 - (void)showTrackingPath:(CGPoint)inPosition
 {
     bool showTrackDot = true ;
@@ -1342,17 +1112,9 @@ float bee = [spriteA body] -> GetGravityScale();
     
     if( ( diff_x < MIN_TRACK_PATH_DIST ) && ( diff_y < MIN_TRACK_PATH_DIST ) )
         showTrackDot = false;
-    
-    /*
-     float floorHeight = (sGame.IsIpad ? IPAD_FLOOR_HEIGTH : FLOOR_HEIGTH);
-     
-     if(inPosition.y < (floorHeight + self.sprite.contentSize.height))
-     showTrackDot = false;
-     */
+
     if(showTrackDot)
     {
-        
-		// NIVEL ACTUAL
         if(!mTrackPath)
         {
             mTrackPath = [CCSpriteBatchNode batchNodeWithFile:@"trackPath.png"];
@@ -1381,8 +1143,6 @@ float bee = [spriteA body] -> GetGravityScale();
 
 - (void)clearTrackingPath
 {
-    
-    NSLog(@"CLEAN UP CALLED: TIROS:%i", tiros);
     for (CCSprite* sprite in mTrackPath.children)
     {
         if(sprite.tag==tiros-1)
@@ -1390,9 +1150,6 @@ float bee = [spriteA body] -> GetGravityScale();
             [TrackingArray addObject:sprite];
         }
     }
-    
-    
-    NSLog(@"TRACKING ARRAY COUNT:%i", TrackingArray.count);
     
     float t = 0.1;
     for (CCSprite* s in TrackingArray)
@@ -1431,13 +1188,19 @@ float bee = [spriteA body] -> GetGravityScale();
     return scale;
 }
 
-
-
-
-
-////////////////////////////////////////////////////////////////////////////////
+#pragma mark Touches Actions
 - (void)ccTouchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
 {
+    
+    for( UITouch *touch in touches ) {
+        CGPoint location = [touch locationInView: [touch view]];
+        
+        
+        location = [[CCDirector sharedDirector] convertToGL: location];
+        location = [self convertToNodeSpace:location];
+        originPoint = location;
+    }
+    
     if (startupSequence > 0) {
     MAXIMUM_NUMBER_OF_STEPS = 25;
 
@@ -1486,7 +1249,7 @@ float bee = [spriteA body] -> GetGravityScale();
     
     
     if (tiros < cantidadDeTirosMaximo) {
-	//Add a new body/atlas sprite at the touched location
+        
 	for( UITouch *touch in touches ) {
 		CGPoint location = [touch locationInView: [touch view]];
        
@@ -1498,6 +1261,7 @@ float bee = [spriteA body] -> GetGravityScale();
       //  memory.color = ccBLUE;
        // memory.opacity = 125;
        // [memory transformPosition:movedCircle.position];
+        
         remainingSpace = movedCircle.position;
         
         numberOfShoots = 0;
@@ -1562,8 +1326,6 @@ float bee = [spriteA body] -> GetGravityScale();
     }
     }
 }
-// on "dealloc" you need to release all your retained objects
-
 
 - (void)ccTouchesMoved:(NSSet *)touches withEvent:(UIEvent *)event{
 
@@ -1577,12 +1339,12 @@ float bee = [spriteA body] -> GetGravityScale();
         location = [[CCDirector sharedDirector] convertToGL:location];
         location = [self convertToNodeSpace:location];
         
-        CGPoint vector = ccpSub(cupido.position, location);
+        CGPoint vector = ccpSub(originPoint, location);
         vector = ccp(vector.x/2, vector.y/2);
         
         
         
-        CGFloat rotateAngle = -ccpToAngle(vector) +  3.1415926f;
+        CGFloat rotateAngle = -ccpToAngle(vector);
       
         float distanciaLinea = sqrtf(powf(vector.x,2) + powf(vector.y,2));
         
@@ -1606,7 +1368,7 @@ float bee = [spriteA body] -> GetGravityScale();
         
         remainingSpace = location;
         
-        shootImpulse = b2Vec2 (-vector.x/13.5,-vector.y/13.5);
+        shootImpulse = b2Vec2 (vector.x/13.5,vector.y/13.5);
        
         float estiramientoDelArco = .25f; //VALOR 1 = tan largo como la distancia del touch al cupido
         
@@ -1698,20 +1460,80 @@ float bee = [spriteA body] -> GetGravityScale();
     }
 }
 
+#pragma mark Swipe Actions
+
+- (void)leftSwipeHandle:(UISwipeGestureRecognizer*)gestureRecognizer  {
+    if (noSeguir == false) {
+        
+        if (levelUsed != levelHigh) {
+            [[CCDirector sharedDirector] replaceScene:[CCTransitionFade transitionWithDuration:0.4 scene:[GameScene scene] withColor:ccWHITE]];
+            [[SimpleAudioEngine sharedEngine] playEffect:@"ganar.mp3"];
+            NSMutableArray* starter = [[NSMutableArray alloc]init];
+            [starter addObject:[NSNumber numberWithInt:levelUsed + 1]];
+            NSLog(@"next level");
+            [starter addObject:[NSNumber numberWithInt:levelHigh]];
+            
+            
+            [[NSUserDefaults standardUserDefaults] setObject:[NSKeyedArchiver archivedDataWithRootObject:starter]
+                                                      forKey:[NSString stringWithFormat:@"data"]];
+            
+            NSMutableArray* starter2 = [[NSMutableArray alloc]init];
+            [starter2 addObject:[NSNumber numberWithFloat:0]];
+            [starter2 addObject:[NSNumber numberWithFloat:0]];
+            [starter2 addObject:[NSNumber numberWithInt:0]];
+            [[NSUserDefaults standardUserDefaults] setObject:[NSKeyedArchiver archivedDataWithRootObject:starter2]
+                                                      forKey:[NSString stringWithFormat:@"memory"]];
+            
+            noSeguir = true;
+            [timer invalidate];
+            timer = nil;
+            [[CCDirector sharedDirector] replaceScene:[CCTransitionFade transitionWithDuration:0.4 scene:[GameScene scene] withColor:ccWHITE]];
+            
+            
+        } else {[self perdedor];}
+        
+    }}
 
 
+- (void)rightSwipeHandle:(UISwipeGestureRecognizer*)gestureRecognizer  {if (noSeguir == false) {
+    if (levelUsed != 1) {
+        
+        [[CCDirector sharedDirector] replaceScene:[CCTransitionFade transitionWithDuration:0.4 scene:[GameScene scene] withColor:ccWHITE]];
+        [[SimpleAudioEngine sharedEngine] playEffect:@"ganar.mp3"];
+        NSMutableArray* starter = [[NSMutableArray alloc]init];
+        [starter addObject:[NSNumber numberWithInt:levelUsed - 1]];
+        NSLog(@"previous level");
+        [starter addObject:[NSNumber numberWithInt:levelHigh]];
+        [[NSUserDefaults standardUserDefaults] setObject:[NSKeyedArchiver archivedDataWithRootObject:starter]
+                                                  forKey:[NSString stringWithFormat:@"data"]];
+        
+        NSMutableArray* starter2 = [[NSMutableArray alloc]init];
+        [starter2 addObject:[NSNumber numberWithFloat:0]];
+        [starter2 addObject:[NSNumber numberWithFloat:0]];
+        [starter2 addObject:[NSNumber numberWithInt:0]];
+        [[NSUserDefaults standardUserDefaults] setObject:[NSKeyedArchiver archivedDataWithRootObject:starter2]
+                                                  forKey:[NSString stringWithFormat:@"memory"]];
+        
+        noSeguir = true;
+        [timer invalidate];
+        timer = nil;
+        [[CCDirector sharedDirector] replaceScene:[CCTransitionFade transitionWithDuration:0.4 scene:[GameScene scene] withColor:ccWHITE]];
+    } else {[self perdedor];}
+    
+}}
 
 
--(void) toggleMusic
+#pragma mark Other: Processing
+
+-(void) reactivate
 {
     
-    gameData.music = !gameData.music;
-    gameData.sound = !gameData.sound;
-    
-    [SimpleAudioEngine sharedEngine].backgroundMusicVolume = gameData.music;
-    [SimpleAudioEngine sharedEngine].effectsVolume = gameData.sound;
-    
+    NSArray* keys = [lh spritesWithTag:TAG_TELEPORT]; {
+        for (LHSprite* spr in keys) {
+            [spr body] -> SetGravityScale(1);
+        }}
 }
+
 
 - (CGRect) selfScreen {
 
@@ -1730,13 +1552,17 @@ float bee = [spriteA body] -> GetGravityScale();
 -(void) gotoLevelMenu
 {
     
-    [[CCDirector sharedDirector] replaceScene:[CCTransitionFade transitionWithDuration:0.5 scene:[mainScene node] ]];
+    [[CCDirector sharedDirector] replaceScene:[CCTransitionFade transitionWithDuration:0.5 scene:[MainScene node] ]];
 }
 
 - (void) dealloc
 {
 	
 	NSLog(@"SALIENDO");
+    
+    for (LHBezier* bez in [lh allBeziers]) {
+        [bez removeSelf];
+    }
     
     [lh release];
     lh = nil;
@@ -1751,7 +1577,7 @@ float bee = [spriteA body] -> GetGravityScale();
     [self unscheduleAllSelectors];
     
 	[self unschedule: @selector(tick:)];
-	[self unschedule: @selector(segundos:)];
+    
     
     
      [myfondito release];

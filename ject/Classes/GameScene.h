@@ -214,6 +214,7 @@
     bool puff;
     int transe;
     
+    CGPoint originPoint;
     CGPoint repeatpoint;
     int repeatcounter;
     bool resetbo;

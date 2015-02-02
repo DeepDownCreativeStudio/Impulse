@@ -10,7 +10,7 @@
 // Import the interfaces
 #import "IntroLayer.h"
 #import "GameScene.h"
-#import "mainScene.h"
+#import "MainScene.h"
 #import "MenuScene.h"
 #import "SimpleAudioEngine.h"
 #define IS_IPHONE_5 ( fabs( ( double )[ [ UIScreen mainScreen ] bounds ].size.height - ( double )568 ) < DBL_EPSILON )
@@ -87,6 +87,6 @@
 	[super onEnter];
     [SimpleAudioEngine sharedEngine].backgroundMusicVolume = 1.0f;
    [[SimpleAudioEngine sharedEngine] playBackgroundMusic:@"background.mp3"];
-	[[CCDirector sharedDirector] replaceScene:[CCTransitionFade transitionWithDuration:1.5 scene:[mainScene scene]]];
+	[[CCDirector sharedDirector] replaceScene:[CCTransitionFade transitionWithDuration:1.5 scene:[MainScene scene]]];
 }
 @end

@@ -5,7 +5,7 @@
 //  Created by Bogdan Vladu on 15.03.2011.
 //
 // Import the interfaces
-#import "mainScene.h"
+#import "MainScene.h"
 #import "GameScene.h"
 #import "SimpleAudioEngine.h"
 
@@ -16,12 +16,8 @@ const int32 POSITION_ITERATIONS = 8;
 const int32 MAXIMUM_NUMBER_OF_STEPS = 25;
 
 // mainScene implementation
-@implementation mainScene
+@implementation MainScene
 
--(void)afterStep {
-	// process collisions and result from callbacks called by the step
-}
-////////////////////////////////////////////////////////////////////////////////
 -(void)step:(ccTime)dt {
 	float32 frameTime = dt;
 	int stepsPerformed = 0;
@@ -34,33 +30,26 @@ const int32 MAXIMUM_NUMBER_OF_STEPS = 25;
 		}
 		world->Step(deltaTime,VELOCITY_ITERATIONS,POSITION_ITERATIONS);
 		stepsPerformed++;
-		[self afterStep]; // process collisions and result from callbacks called by the step
 	}
 	world->ClearForces ();
 }
-////////////////////////////////////////////////////////////////////////////////
+
+
 +(id) scene
 {
-	// 'scene' is an autorelease object.
 	CCScene *scene = [CCScene node];
-	
-	// 'layer' is an autorelease object.
-	mainScene *layer = [mainScene node];
-	
-	// add layer as a child to scene
+	MainScene *layer = [MainScene node];
 	[scene addChild: layer];
-	
-	// return the scene
 	return scene;
 }
-////////////////////////////////////////////////////////////////////////////////
-// initialize your instance here
--(id) init
-{
-	if( (self=[super init])) {
+
+-(id) init {
+    
+    self = [super init];
+    
+	if (self) {
  
-        
-		// enable touches
+
 		self.isTouchEnabled = YES;
 		
 		// enable accelerometer
@@ -155,7 +144,7 @@ const int32 MAXIMUM_NUMBER_OF_STEPS = 25;
         }
     }
         LHSprite * iner = [lh spriteWithUniqueName:@"point_0"];
-        float mehr = [UIScreen mainScreen].bounds.size.height - 480;
+        float mehr = [self selfScreen].size.height - 480;
         [iner transformPosition:ccp(mehr + iner.position.x -150 * (levelUsed - 1), iner.position.y)];
                         NSLog(@"arrStars count %i",self.arrStars.count);
         for (LHSprite* spr in [lh spritesWithTag:TAG_LOST]) {
@@ -199,8 +188,7 @@ const int32 MAXIMUM_NUMBER_OF_STEPS = 25;
     
     [blow runAction:repeats];
     }
-    
-    
+
     
     
     for (LHSprite* spr in [lh spritesWithTag:TAG_LOST]) {
@@ -210,7 +198,7 @@ const int32 MAXIMUM_NUMBER_OF_STEPS = 25;
             int level = [numStr integerValue];
             level++;
             if (level > levelHigh) {
-                spr.color = ccRED;
+                spr.color = ccGRAY;
             }
         }
     }
@@ -258,23 +246,19 @@ const int32 MAXIMUM_NUMBER_OF_STEPS = 25;
 //	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
 
 }
-////////////////////////////////////////////////////////////////////////////////
-//FIX TIME STEPT------------>>>>>>>>>>>>>>>>>>
+
 -(void) tick: (ccTime) dt
 {
 	[self step:dt];
     
-	//Iterate over the bodies in the physics world
 	for (b2Body* b = world->GetBodyList(); b; b = b->GetNext())
 	{
 		if (b->GetUserData() != NULL) 
         {
-			//Synchronize the AtlasSprites position and rotation with the corresponding body
 			CCSprite *myActor = (CCSprite*)b->GetUserData();
             
             if(myActor != 0)
             {
-                //THIS IS VERY IMPORTANT - GETTING THE POSITION FROM BOX2D TO COCOS2D
                 myActor.position = [LevelHelperLoader metersToPoints:b->GetPosition()];
                 myActor.rotation = -1 * CC_RADIANS_TO_DEGREES(b->GetAngle());		
             }
@@ -298,9 +282,9 @@ const int32 MAXIMUM_NUMBER_OF_STEPS = 25;
         
          if (follow.position.x > -200 && follow.position.x < 730) {
         
-        float dimer = [UIScreen mainScreen].bounds.size.height / 2 - follow.position.x;
+        float dimer = [self selfScreen].size.height / 2 - follow.position.x;
              if (dimer<0) {dimer = -dimer;}
-        dimer = (dimer / ([UIScreen mainScreen].bounds.size.height / 2)) * 125;
+        dimer = (dimer / ([self selfScreen].size.height / 2)) * 125;
         if (dimer> 125) {dimer = 125;}
         dimer = 255 - dimer;
         follow.opacity = dimer;
@@ -313,9 +297,9 @@ const int32 MAXIMUM_NUMBER_OF_STEPS = 25;
         }
     }
     
-    float dimer = [UIScreen mainScreen].bounds.size.height / 2 - fst.position.x;
+    float dimer = [self selfScreen].size.height / 2 - fst.position.x;
     if (dimer<0) {dimer = -dimer;}
-    dimer = (dimer / ([UIScreen mainScreen].bounds.size.height / 2)) * 125;
+    dimer = (dimer / ([self selfScreen].size.height / 2)) * 125;
     if (dimer> 125) {dimer = 125;}
     dimer = 255 - dimer;
     fst.opacity = dimer;
@@ -342,8 +326,8 @@ const int32 MAXIMUM_NUMBER_OF_STEPS = 25;
         
         follow.position = ccp(follow.position.x - prefirst + fst.position.x, follow.position.y);
         if (follow.position.x > -200 && follow.position.x < 730) {
-        float dimer = [UIScreen mainScreen].bounds.size.height / 2 - follow.position.x;
-        dimer = (dimer / ([UIScreen mainScreen].bounds.size.height / 2)) * 30;
+        float dimer = [self selfScreen].size.height / 2 - follow.position.x;
+        dimer = (dimer / ([self selfScreen].size.height / 2)) * 30;
         if (dimer> 30) {dimer = 30;}
             follow.rotation = dimer;
             [follow resumeSchedulerAndActions];
@@ -356,10 +340,10 @@ const int32 MAXIMUM_NUMBER_OF_STEPS = 25;
     //SWIPE
 
     
-    if (fst.position.x > [UIScreen mainScreen].bounds.size.height / 2) {
+    if (fst.position.x > [self selfScreen].size.height / 2) {
         
         float vel = [fst body] -> GetLinearVelocity().x;
-        vel = vel * 9 - (fst.position.x - [UIScreen mainScreen].bounds.size.height / 2);
+        vel = vel * 9 - (fst.position.x - [self selfScreen].size.height / 2);
         vel = vel / 15;
         
         for (LHSprite*but in [lh spritesWithTag:TAG_INVISIBLE]) {
@@ -369,12 +353,12 @@ const int32 MAXIMUM_NUMBER_OF_STEPS = 25;
     
     }
     
-    else if (lst.position.x < [UIScreen mainScreen].bounds.size.height / 2) {
+    else if (lst.position.x < [self selfScreen].size.height / 2) {
         
         
         
         float vel = [fst body] -> GetLinearVelocity().x;
-        vel = vel * 9 - (lst.position.x - [UIScreen mainScreen].bounds.size.height / 2);
+        vel = vel * 9 - (lst.position.x - [self selfScreen].size.height / 2);
         vel = vel / 15;
         
         for (LHSprite*but in [lh spritesWithTag:TAG_INVISIBLE]) {
@@ -390,14 +374,14 @@ const int32 MAXIMUM_NUMBER_OF_STEPS = 25;
         swap =[fst body] -> GetLinearVelocity().x * .95;
         
         
-        float dist = spriteOp.position.x - [UIScreen mainScreen].bounds.size.height / 2;
+        float dist = spriteOp.position.x - [self selfScreen].size.height / 2;
         if (dist < 0) {dist = - dist;}
-        if (dist>=0 && [UIScreen mainScreen].bounds.size.height != 480) {switched = true;}
-        if (dist>20 && [UIScreen mainScreen].bounds.size.height == 480) {switched = true;}
+        if (dist>=0 && [self selfScreen].size.height != 480) {switched = true;}
+        if (dist>20 && [self selfScreen].size.height == 480) {switched = true;}
         if (swap<0&&swap>-10 && switched) {
             LHSprite* forth;
             
-            if (spriteOp.position.x + 5 >[UIScreen mainScreen].bounds.size.height / 2) {
+            if (spriteOp.position.x + 5 >[self selfScreen].size.height / 2) {
                 forth = spriteOp;
             }
             else {
@@ -408,14 +392,14 @@ const int32 MAXIMUM_NUMBER_OF_STEPS = 25;
                 nextLevel++;
                 forth = [lh spriteWithUniqueName:[NSString stringWithFormat:@"point_%i", nextLevel]];
             }
-            float vel = forth.position.x - [UIScreen mainScreen].bounds.size.height / 2;
+            float vel = forth.position.x - [self selfScreen].size.height / 2;
             swap = -.1 * vel;
         }
         
         if (swap>0&&swap<10&& switched) {
             LHSprite* forth;
             
-            if (spriteOp.position.x - 5 <[UIScreen mainScreen].bounds.size.height / 2) {
+            if (spriteOp.position.x - 5 <[self selfScreen].size.height / 2) {
                 forth = spriteOp;
             }
             else {
@@ -426,7 +410,7 @@ const int32 MAXIMUM_NUMBER_OF_STEPS = 25;
                 nextLevel--;
                 forth = [lh spriteWithUniqueName:[NSString stringWithFormat:@"point_%i", nextLevel]];
             }
-            float vel = forth.position.x - [UIScreen mainScreen].bounds.size.height / 2;
+            float vel = forth.position.x - [self selfScreen].size.height / 2;
             swap = -.1 * vel;
         }
         else {
@@ -526,6 +510,20 @@ const int32 MAXIMUM_NUMBER_OF_STEPS = 25;
         }
     }
     }
+}
+
+- (CGRect) selfScreen {
+    
+    
+    
+    CGFloat a = [UIScreen mainScreen].bounds.size.height;
+    CGFloat b = [UIScreen mainScreen].bounds.size.width;
+    
+    if (a>b) {return CGRectMake(0, 0, b, a);}
+    else { return CGRectMake(0, 0, a, b);}
+    
+    
+    
 }
 
 -(void) goTo :(int) change {

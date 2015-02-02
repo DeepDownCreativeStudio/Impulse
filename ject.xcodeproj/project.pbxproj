@@ -393,7 +393,7 @@
 		8BF8F8CC189150DE0092A2C5 /* menu_menu-hd.png in Resources */ = {isa = PBXBuildFile; fileRef = 8BF8F8C9189150DE0092A2C5 /* menu_menu-hd.png */; };
 		8BF8F8CD189150DE0092A2C5 /* menu_menu.png in Resources */ = {isa = PBXBuildFile; fileRef = 8BF8F8CA189150DE0092A2C5 /* menu_menu.png */; };
 		8BF8F8CE189150DE0092A2C5 /* menu.pshs in Resources */ = {isa = PBXBuildFile; fileRef = 8BF8F8CB189150DE0092A2C5 /* menu.pshs */; };
-		8BF8F8D11891562F0092A2C5 /* mainScene.mm in Sources */ = {isa = PBXBuildFile; fileRef = 8BF8F8D01891562F0092A2C5 /* mainScene.mm */; };
+		8BF8F8D11891562F0092A2C5 /* MainScene.mm in Sources */ = {isa = PBXBuildFile; fileRef = 8BF8F8D01891562F0092A2C5 /* MainScene.mm */; };
 		8BF8F8D3189157AD0092A2C5 /* M1.plhs in Resources */ = {isa = PBXBuildFile; fileRef = 8BF8F8D2189157AD0092A2C5 /* M1.plhs */; };
 		EF030CF017A6E2E800628189 /* J9.plhs in Resources */ = {isa = PBXBuildFile; fileRef = EF030CED17A6E2E800628189 /* J9.plhs */; };
 		EF030CF117A6E2E800628189 /* J10.plhs in Resources */ = {isa = PBXBuildFile; fileRef = EF030CEE17A6E2E800628189 /* J10.plhs */; };
@@ -1079,8 +1079,8 @@
 		8BF8F8C9189150DE0092A2C5 /* menu_menu-hd.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "menu_menu-hd.png"; sourceTree = "<group>"; };
 		8BF8F8CA189150DE0092A2C5 /* menu_menu.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = menu_menu.png; sourceTree = "<group>"; };
 		8BF8F8CB189150DE0092A2C5 /* menu.pshs */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = menu.pshs; sourceTree = "<group>"; };
-		8BF8F8CF1891562F0092A2C5 /* mainScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = mainScene.h; sourceTree = "<group>"; };
-		8BF8F8D01891562F0092A2C5 /* mainScene.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = mainScene.mm; sourceTree = "<group>"; };
+		8BF8F8CF1891562F0092A2C5 /* MainScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MainScene.h; sourceTree = "<group>"; };
+		8BF8F8D01891562F0092A2C5 /* MainScene.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = MainScene.mm; sourceTree = "<group>"; };
 		8BF8F8D2189157AD0092A2C5 /* M1.plhs */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = M1.plhs; sourceTree = "<group>"; };
 		EF030CED17A6E2E800628189 /* J9.plhs */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = J9.plhs; sourceTree = "<group>"; };
 		EF030CEE17A6E2E800628189 /* J10.plhs */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = J10.plhs; sourceTree = "<group>"; };
@@ -1749,48 +1749,11 @@
 		3B6FC83C175633B100733611 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
-				3B6FC83D175633B100733611 /* Appirater.h */,
-				3B6FC83E175633B100733611 /* Appirater.m */,
-				3B6FC83F175633B100733611 /* CCScrollLayer.h */,
-				3B6FC840175633B100733611 /* CCScrollLayer.m */,
-				3B6FC841175633B100733611 /* ChapterSelect.h */,
-				8BE0491218AEBDE700B6CFE3 /* ChapterSelect.mm */,
-				3B6FC843175633B100733611 /* ConfigScene.h */,
-				3B6FC84E175633B100733611 /* GameCenterManager.m */,
-				3B6FC844175633B100733611 /* ConfigScene.mm */,
-				3B6FC845175633B100733611 /* Constants.h */,
-				3B6FC846175633B100733611 /* EndScene.h */,
-				3B6FC847175633B100733611 /* EndScene.mm */,
-				3B6FC848175633B100733611 /* FondoLayer.h */,
-				3B6FC849175633B100733611 /* FondoLayer.mm */,
-				3B6FC84A175633B100733611 /* GameAppDelegate.h */,
-				3B6FC84B175633B100733611 /* GameAppDelegate.mm */,
-				3B6FC84D175633B100733611 /* GameCenterManager.h */,
-				3B6FC84F175633B100733611 /* GameData.h */,
-				3B6FC850175633B100733611 /* GameData.m */,
-				3B6FC851175633B100733611 /* GameDataParser.h */,
-				3B6FC852175633B100733611 /* GameDataParser.m */,
-				3B6FC84C175633B100733611 /* GameScene.h */,
-				3B6FC853175633B100733611 /* GameScene.mm */,
-				3B6FC854175633B100733611 /* LevelScene.mm */,
-				3B6FC855175633B100733611 /* GDataXMLNode.h */,
-				3B6FC856175633B100733611 /* GDataXMLNode.m */,
-				3B6FC857175633B100733611 /* HUDLayer.h */,
-				3B6FC858175633B100733611 /* HUDLayer.mm */,
-				3B6FC859175633B100733611 /* IntroLayer.h */,
-				3B6FC85A175633B100733611 /* IntroLayer.mm */,
-				3B6FC85B175633B100733611 /* Level.h */,
-				3B6FC85C175633B100733611 /* Level.mm */,
-				3B6FC85D175633B100733611 /* LevelScene.h */,
-				8BF8F8CF1891562F0092A2C5 /* mainScene.h */,
-				8BF8F8D01891562F0092A2C5 /* mainScene.mm */,
-				3B6FC85E175633B100733611 /* MenuScene.h */,
-				3B6FC85F175633B100733611 /* MenuScene.mm */,
-				3B6FC860175633B100733611 /* MyContactListener.h */,
-				3B6FC861175633B100733611 /* MyContactListener.mm */,
-				3B6FC862175633B100733611 /* SynthesizeSingleton.h */,
-				3B6FC865175633B100733611 /* GLES-Render.h */,
-				3B6FC866175633B100733611 /* GLES-Render.mm */,
+				8BD006C81A7F109400E3F086 /* MenuScene */,
+				8BD006C61A7F106500E3F086 /* GameScene */,
+				8BD006C51A7F105C00E3F086 /* MainScene */,
+				8BD006C71A7F106B00E3F086 /* IntroLayer */,
+				8BD006C91A7F109F00E3F086 /* Trash */,
 			);
 			name = Classes;
 			path = ject/Classes;
@@ -2167,6 +2130,83 @@
 			path = Resources/INGAME;
 			sourceTree = "<group>";
 		};
+		8BD006C51A7F105C00E3F086 /* MainScene */ = {
+			isa = PBXGroup;
+			children = (
+				8BF8F8CF1891562F0092A2C5 /* MainScene.h */,
+				8BF8F8D01891562F0092A2C5 /* MainScene.mm */,
+			);
+			name = MainScene;
+			sourceTree = "<group>";
+		};
+		8BD006C61A7F106500E3F086 /* GameScene */ = {
+			isa = PBXGroup;
+			children = (
+				3B6FC84C175633B100733611 /* GameScene.h */,
+				3B6FC853175633B100733611 /* GameScene.mm */,
+			);
+			name = GameScene;
+			sourceTree = "<group>";
+		};
+		8BD006C71A7F106B00E3F086 /* IntroLayer */ = {
+			isa = PBXGroup;
+			children = (
+				3B6FC859175633B100733611 /* IntroLayer.h */,
+				3B6FC85A175633B100733611 /* IntroLayer.mm */,
+			);
+			name = IntroLayer;
+			sourceTree = "<group>";
+		};
+		8BD006C81A7F109400E3F086 /* MenuScene */ = {
+			isa = PBXGroup;
+			children = (
+				3B6FC85E175633B100733611 /* MenuScene.h */,
+				3B6FC85F175633B100733611 /* MenuScene.mm */,
+			);
+			name = MenuScene;
+			sourceTree = "<group>";
+		};
+		8BD006C91A7F109F00E3F086 /* Trash */ = {
+			isa = PBXGroup;
+			children = (
+				3B6FC83D175633B100733611 /* Appirater.h */,
+				3B6FC83E175633B100733611 /* Appirater.m */,
+				3B6FC83F175633B100733611 /* CCScrollLayer.h */,
+				3B6FC840175633B100733611 /* CCScrollLayer.m */,
+				3B6FC841175633B100733611 /* ChapterSelect.h */,
+				8BE0491218AEBDE700B6CFE3 /* ChapterSelect.mm */,
+				3B6FC843175633B100733611 /* ConfigScene.h */,
+				3B6FC84E175633B100733611 /* GameCenterManager.m */,
+				3B6FC844175633B100733611 /* ConfigScene.mm */,
+				3B6FC845175633B100733611 /* Constants.h */,
+				3B6FC846175633B100733611 /* EndScene.h */,
+				3B6FC847175633B100733611 /* EndScene.mm */,
+				3B6FC848175633B100733611 /* FondoLayer.h */,
+				3B6FC849175633B100733611 /* FondoLayer.mm */,
+				3B6FC84A175633B100733611 /* GameAppDelegate.h */,
+				3B6FC84B175633B100733611 /* GameAppDelegate.mm */,
+				3B6FC84D175633B100733611 /* GameCenterManager.h */,
+				3B6FC84F175633B100733611 /* GameData.h */,
+				3B6FC850175633B100733611 /* GameData.m */,
+				3B6FC851175633B100733611 /* GameDataParser.h */,
+				3B6FC852175633B100733611 /* GameDataParser.m */,
+				3B6FC854175633B100733611 /* LevelScene.mm */,
+				3B6FC855175633B100733611 /* GDataXMLNode.h */,
+				3B6FC856175633B100733611 /* GDataXMLNode.m */,
+				3B6FC857175633B100733611 /* HUDLayer.h */,
+				3B6FC858175633B100733611 /* HUDLayer.mm */,
+				3B6FC85B175633B100733611 /* Level.h */,
+				3B6FC85C175633B100733611 /* Level.mm */,
+				3B6FC85D175633B100733611 /* LevelScene.h */,
+				3B6FC860175633B100733611 /* MyContactListener.h */,
+				3B6FC861175633B100733611 /* MyContactListener.mm */,
+				3B6FC862175633B100733611 /* SynthesizeSingleton.h */,
+				3B6FC865175633B100733611 /* GLES-Render.h */,
+				3B6FC866175633B100733611 /* GLES-Render.mm */,
+			);
+			name = Trash;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -2483,7 +2523,7 @@
 				3B6FC65C175632D700733611 /* CCConfiguration.m in Sources */,
 				3B6FC65F175632D700733611 /* ccDeprecated.m in Sources */,
 				3B6FC662175632D700733611 /* CCDirector.m in Sources */,
-				8BF8F8D11891562F0092A2C5 /* mainScene.mm in Sources */,
+				8BF8F8D11891562F0092A2C5 /* MainScene.mm in Sources */,
 				3B6FC665175632D700733611 /* CCDrawingPrimitives.m in Sources */,
 				3B6FC668175632D700733611 /* CCDrawNode.m in Sources */,
 				3B6FC66B175632D800733611 /* ccFPSImages.m in Sources */,
