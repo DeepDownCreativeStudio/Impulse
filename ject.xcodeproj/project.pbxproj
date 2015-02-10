@@ -2235,6 +2235,11 @@
 			attributes = {
 				LastUpgradeCheck = 0460;
 				ORGANIZATIONNAME = "GAMEXTAR LTD";
+				TargetAttributes = {
+					3B6FC5F0175632D500733611 = {
+						DevelopmentTeam = 5U69V73RKG;
+					};
+				};
 			};
 			buildConfigurationList = 3B6FC5EC175632D500733611 /* Build configuration list for PBXProject "ject" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -2756,8 +2761,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = YES;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Federico Bustos Fierro (747XPT5D8A)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Federico Bustos Fierro (747XPT5D8A)";
 				COPY_PHASE_STRIP = NO;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -2780,7 +2785,7 @@
 					"-lxml2",
 				);
 				PRODUCT_NAME = ject;
-				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE = "b51143a2-65b7-4802-be46-d77ee161757d";
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
 				TARGETED_DEVICE_FAMILY = 1;
 				USER_HEADER_SEARCH_PATHS = "\"ject/libs\"";
@@ -2792,8 +2797,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = YES;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Federico Bustos Fierro (747XPT5D8A)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Federico Bustos Fierro (747XPT5D8A)";
 				COPY_PHASE_STRIP = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = ject/Prefix.pch;
@@ -2815,7 +2820,7 @@
 					"-lxml2",
 				);
 				PRODUCT_NAME = ject;
-				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE = "b51143a2-65b7-4802-be46-d77ee161757d";
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
 				TARGETED_DEVICE_FAMILY = 1;
 				USER_HEADER_SEARCH_PATHS = "\"ject/libs\"";

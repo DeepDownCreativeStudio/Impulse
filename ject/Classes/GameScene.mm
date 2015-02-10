@@ -158,7 +158,7 @@ bool m_useWeldJoint = true;
     bg.position = ccp ([self selfScreen].size.height / 2,160);
     bg.scaleX = [self selfScreen].size.height / 480;
     bg.zOrder = -500;
-    bg.opacity = 120;
+    bg.opacity = 255;
     bg.tag = 10;
     
     menu = [CCMenu menuWithItems:nil];
@@ -185,11 +185,21 @@ bool m_useWeldJoint = true;
     [[[CCDirector sharedDirector] view]addGestureRecognizer:leftRecognizer];
     [leftRecognizer release];
     
-    UISwipeGestureRecognizer *downRecognizer = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(gotoLevelMenu)];
+    UISwipeGestureRecognizer *downRecognizer = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(restart)];
     downRecognizer.direction = UISwipeGestureRecognizerDirectionDown;
     [downRecognizer setNumberOfTouchesRequired:2];
     [[[CCDirector sharedDirector] view]addGestureRecognizer:downRecognizer];
     [downRecognizer release];
+    
+    UISwipeGestureRecognizer *uprecognizer = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(gotoLevelMenu)];
+    uprecognizer.direction = UISwipeGestureRecognizerDirectionUp;
+    [uprecognizer setNumberOfTouchesRequired:2];
+    [[[CCDirector sharedDirector] view]addGestureRecognizer:uprecognizer];
+    [uprecognizer release];
+}
+
+- (void) restart {
+    [[CCDirector sharedDirector] replaceScene:[CCTransitionFade transitionWithDuration:0.4 scene:[GameScene scene] withColor:ccWHITE]];
 }
 
 - (void) levelInitialSetup {
@@ -467,38 +477,53 @@ bool m_useWeldJoint = true;
         {
             LHSprite *spriteA = (LHSprite *) bodyA->GetUserData();
             LHSprite *spriteB = (LHSprite *) bodyB->GetUserData();
+            LHSprite *spriteBall;
+            LHSprite *spriteOther;
             
-            if (spriteB.tag != TAG_ARROW) {break;}
+            if (spriteA.tag == TAG_ARROW || spriteB.tag == TAG_ARROW) {
+            if (spriteA.tag == TAG_ARROW) { spriteBall = spriteA; spriteOther = spriteB;}
+            if (spriteB.tag == TAG_ARROW) { spriteBall = spriteB; spriteOther = spriteA;}
             
-            switch (spriteA.tag) {
+            
+            
+            switch (spriteOther.tag) {
                 case DEFAULT_TAG:
-                    [self defaultContactWithSprite:spriteA];
+                    [self defaultContactWithSprite:spriteOther];
                     break;
                     
                 case TAG_KEY:
-                    [self keyContactWithSprite:spriteA];
+                    [self keyContactWithSprite:spriteOther];
                     break;
                     
                 case TAG_BROKEN:
-                    [self glassContactWithSprite:spriteA];
+                    [self glassContactWithSprite:spriteOther];
                     break;
                     
                 case TAG_TELEPORT:
-                    [self teleportContactWithSprite:spriteA];
+                    [self teleportContactWithSprite:spriteOther];
                     break;
                     
                 case TAG_WIN: {
                     b2Fixture * fixture2 = contact.fixtureA;
                     bool canWin = fixture2 -> IsSensor();
-                    canWin? [self winContactWithSprite:spriteA] : [self falseWinContactWithSprite:spriteA];
+                    canWin? [self winContactWithSprite:spriteOther] : [self falseWinContactWithSprite:spriteOther];
                     break;
                 }
                     
                 default:
                     break;
             }
+                
+            }
+        
         }
     }
+}
+
+- (void) responseToContactWithBetweenBodyA:(b2Body*) bodyA bodyB:(b2Body*) bodyB {
+
+
+
 }
 
 - (void) defaultContactWithSprite: (LHSprite*) spriteA {
@@ -1461,6 +1486,7 @@ bool m_useWeldJoint = true;
 }
 
 #pragma mark Swipe Actions
+
 
 - (void)leftSwipeHandle:(UISwipeGestureRecognizer*)gestureRecognizer  {
     if (noSeguir == false) {

@@ -23,7 +23,7 @@
 	<key>HDSuffix</key>
 	<string>-hd</string>
 	<key>LastLevelLoaded</key>
-	<string>/Users/Developer/Documents/Impulse/ject/LH/NIVELES/J40.plhs</string>
+	<string>/Users/Developer/Documents/Impulse/ject/LH/NIVELES/J31.plhs</string>
 	<key>Orientation</key>
 	<integer>1</integer>
 	<key>ProjectName</key>
@@ -38,7 +38,6 @@
 		<string>TAG_BROKEN</string>
 		<string>TAG_KEY</string>
 		<string>TAG_TELEPORT</string>
-		<string>TAG_DESIGN</string>
 	</array>
 </dict>
 </plist>
