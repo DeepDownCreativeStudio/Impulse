@@ -586,9 +586,9 @@
 								<key>Opacity</key>
 								<real>1</real>
 								<key>Position</key>
-								<string>{236.70948181301355, 220.28058308362961}</string>
+								<string>{236.70948181301355, 230.28058308362961}</string>
 								<key>Scale</key>
-								<string>{0.40258756279945374, 1.1030886173248291}</string>
+								<string>{0.40258756279945374, 1.2140945196151733}</string>
 								<key>SpriteSize</key>
 								<string>{316.5, 165.5}</string>
 								<key>Tag</key>

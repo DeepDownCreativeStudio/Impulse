@@ -199,7 +199,7 @@ bool m_useWeldJoint = true;
 }
 
 - (void) restart {
-    [[CCDirector sharedDirector] replaceScene:[CCTransitionFade transitionWithDuration:0.4 scene:[GameScene scene] withColor:ccWHITE]];
+[[CCDirector sharedDirector] replaceScene:[CCTransitionFade transitionWithDuration:0.4 scene:[GameScene scene] withColor:ccWHITE]];
 }
 
 - (void) levelInitialSetup {
@@ -260,7 +260,7 @@ bool m_useWeldJoint = true;
     if (noSeguir == false)
     {
         noSeguir = true;
-        [[CCDirector sharedDirector] replaceScene:[CCTransitionFade transitionWithDuration:0.5 scene:[MainScene node]]];
+[[CCDirector sharedDirector] replaceScene:[CCTransitionFade transitionWithDuration:0.4 scene:[MainScene scene] withColor:ccWHITE]];
         [[SimpleAudioEngine sharedEngine] playEffect:@"photo.mp3"];
     }
 }
@@ -270,7 +270,6 @@ bool m_useWeldJoint = true;
 -(void) StartLevel:(NSString*) level
 {
 
-	NSLog(@"Iniciando Nivel:%@", level);
 	
 
 	// Define the gravity vector.
@@ -335,7 +334,6 @@ bool m_useWeldJoint = true;
     
     box = [lh spriteWithUniqueName:@"box"];
     if (box!=nil) {
-        NSLog(@"box existe");
    }
     
     CCAction *fadeIn = [CCFadeTo actionWithDuration:0.35f opacity:127];
@@ -442,11 +440,11 @@ bool m_useWeldJoint = true;
         for (LHBezier* bez in [lh allBeziers]) {
             bez.visible = false;
         }
-        NSLog(@"ext %f",[lh returnExtension]);
+    
         if ([lh returnExtension]==480) {
             startupSequence = 1;
         } else {
-            NSLog(@"startup = 0");
+            
             startupSequence = 0;
             float ext = [lh returnExtension] *([self selfScreen].size.height/480);
             
@@ -614,7 +612,6 @@ bool m_useWeldJoint = true;
             
             [[SimpleAudioEngine sharedEngine] playEffect:@"door.mp3"];
             keyCount = keyCount - 1;
-            NSLog(@"key count = %i", keyCount);
             [spriteA body] -> SetGravityScale(278);
             spriteA.visible = false;
             if (keyCount == 0){
@@ -664,22 +661,18 @@ bool m_useWeldJoint = true;
                 if ([spriteA.uniqueName isEqualToString:@"teleport1"]){
                     
                     teleport = [lh spriteWithUniqueName:@"teleport2"];
-                    NSLog(@"teleporting to 2, position %f, %f",[teleport position].x,[teleport position].y);
                 }
                 if ([spriteA.uniqueName isEqualToString:@"teleport2"]){
                     
                     teleport = [lh spriteWithUniqueName:@"teleport1"];
-                    NSLog(@"teleporting to 1, position %f, %f",[teleport position].x,[teleport position].y);
                 }
                 if ([spriteA.uniqueName isEqualToString:@"teleport3"]){
                     
                     teleport = [lh spriteWithUniqueName:@"teleport4"];
-                    NSLog(@"teleporting to 4, position %f, %f",[teleport position].x,[teleport position].y);
                 }
                 if ([spriteA.uniqueName isEqualToString:@"teleport4"]){
                     
                     teleport = [lh spriteWithUniqueName:@"teleport3"];
-                    NSLog(@"teleporting to 3, position %f, %f",[teleport position].x,[teleport position].y);
                 }
                 
                 [teleport transformScale:1.2];
@@ -886,7 +879,6 @@ bool m_useWeldJoint = true;
         [memory transformScale:1];
         memory.opacity = 200;
         [memory runAction:[CCFadeTo actionWithDuration:.35f opacity:125.0f]];
-         NSLog(@"creating memory in position %f, %f",memoryX,memoryY);
     }
     
     if (following.tag == TAG_ARROW)
@@ -929,8 +921,8 @@ bool m_useWeldJoint = true;
 - (void) moveBackground {
 
     
-   // [bg transformPosition:ccp(-self.position.x + [self selfScreen].size.height/2, bg.position.y)];
-   // [bg2 transformPosition:ccp(-self.position.x + [self selfScreen].size.height/2, bg.position.y)];
+    [bg transformPosition:ccp(-self.position.x + [self selfScreen].size.height/2, bg.position.y)];
+    [bg2 transformPosition:ccp(-self.position.x + [self selfScreen].size.height/2, bg.position.y)];
     [menu setPosition:ccp(-self.position.x + [self selfScreen].size.height/2, menu.position.y)];
 
 }
@@ -948,7 +940,6 @@ bool m_useWeldJoint = true;
             self.position = ccp(-ball.position.x+ [self selfScreen].size.height/2, self.position.y);
         }
         
-        NSLog(@"ball.x %f, y %f", ball.position.x, ball.position.y);
         
         BOOL bottomLost = ball.position.y<0;
         BOOL leftLost = ball.position.x<0;
@@ -1022,7 +1013,7 @@ bool m_useWeldJoint = true;
     if (noSeguir == false) {
     noSeguir = true;
         
-        NSMutableArray* starter2 = [[NSMutableArray alloc]init];
+        NSMutableArray* starter2 = [[[NSMutableArray alloc]init] autorelease];
         [starter2 addObject:[NSNumber numberWithFloat:remainingSpace.x]];
         [starter2 addObject:[NSNumber numberWithFloat:remainingSpace.y]];
         [starter2 addObject:[NSNumber numberWithInt:1]];
@@ -1031,8 +1022,7 @@ bool m_useWeldJoint = true;
         
         
     [[SimpleAudioEngine sharedEngine] playEffect:@"photo.mp3"];
-      //  [[CCDirector sharedDirector] popScene];
-  [[CCDirector sharedDirector] pushScene:[CCTransitionFade transitionWithDuration:0.4 scene:[GameScene scene] withColor:ccWHITE]];
+  [[CCDirector sharedDirector] replaceScene:[CCTransitionFade transitionWithDuration:0.4 scene:[GameScene scene] withColor:ccWHITE]];
     }
 }
 
@@ -1040,11 +1030,11 @@ bool m_useWeldJoint = true;
 -(void) ganador {
     
     
-    NSMutableArray* starter = [[NSMutableArray alloc]init];
+    NSMutableArray* starter = [[[NSMutableArray alloc]init] autorelease];
     int ultimoNivel= 100;
     
     
-    NSMutableArray* starter2 = [[NSMutableArray alloc]init];
+    NSMutableArray* starter2 = [[[NSMutableArray alloc]init] autorelease];
     [starter2 addObject:[NSNumber numberWithFloat:0]];
     [starter2 addObject:[NSNumber numberWithFloat:0]];
     [starter2 addObject:[NSNumber numberWithInt:0]];
@@ -1053,11 +1043,9 @@ bool m_useWeldJoint = true;
     
     
     if (levelUsed == ultimoNivel) {
-        NSLog(@"ULTIMO NIVEL");
         [starter addObject:[NSNumber numberWithInt:levelUsed]];
     }
     else {
-        NSLog(@"avanza al siguiente");
         [starter addObject:[NSNumber numberWithInt:levelUsed + 1]];
     }
     
@@ -1089,7 +1077,6 @@ bool m_useWeldJoint = true;
     
     int trialWin = 1;
     if (repeat == 0) {trialWin = 2;}
-    NSLog(@"repeat WIN %i",repeat);
     
     [[NSUserDefaults standardUserDefaults] setObject:[NSKeyedArchiver archivedDataWithRootObject:starter]
                                               forKey:[NSString stringWithFormat:@"data"]];
@@ -1109,7 +1096,8 @@ bool m_useWeldJoint = true;
     noSeguir = true;
     [timer invalidate];
     timer = nil;
-	[[CCDirector sharedDirector] replaceScene:[CCTransitionFade transitionWithDuration:0.4 scene:[GameScene scene] withColor:ccWHITE]];
+    [[CCDirector sharedDirector] replaceScene:[CCTransitionFade transitionWithDuration:0.4 scene:[GameScene scene] withColor:ccWHITE]];
+    
 }
 
 
@@ -1241,7 +1229,6 @@ bool m_useWeldJoint = true;
         if (startupSequence != 4) {
         startupSequence = 2;
         }
-        NSLog(@"start = 2");
     }
 }
 
@@ -1253,7 +1240,6 @@ bool m_useWeldJoint = true;
         startupSequence = 4;
     if (resetbo) {[self perdedor];}
     else {
-        NSLog(@"ENDED");
     
     if (numberOfShoots>0) {
         
@@ -1492,18 +1478,17 @@ bool m_useWeldJoint = true;
     if (noSeguir == false) {
         
         if (levelUsed != levelHigh) {
-            [[CCDirector sharedDirector] replaceScene:[CCTransitionFade transitionWithDuration:0.4 scene:[GameScene scene] withColor:ccWHITE]];
+            
             [[SimpleAudioEngine sharedEngine] playEffect:@"ganar.mp3"];
-            NSMutableArray* starter = [[NSMutableArray alloc]init];
+            NSMutableArray* starter = [[[NSMutableArray alloc]init] autorelease];
             [starter addObject:[NSNumber numberWithInt:levelUsed + 1]];
-            NSLog(@"next level");
             [starter addObject:[NSNumber numberWithInt:levelHigh]];
             
             
             [[NSUserDefaults standardUserDefaults] setObject:[NSKeyedArchiver archivedDataWithRootObject:starter]
                                                       forKey:[NSString stringWithFormat:@"data"]];
             
-            NSMutableArray* starter2 = [[NSMutableArray alloc]init];
+            NSMutableArray* starter2 = [[[NSMutableArray alloc]init] autorelease];
             [starter2 addObject:[NSNumber numberWithFloat:0]];
             [starter2 addObject:[NSNumber numberWithFloat:0]];
             [starter2 addObject:[NSNumber numberWithInt:0]];
@@ -1513,7 +1498,7 @@ bool m_useWeldJoint = true;
             noSeguir = true;
             [timer invalidate];
             timer = nil;
-            [[CCDirector sharedDirector] replaceScene:[CCTransitionFade transitionWithDuration:0.4 scene:[GameScene scene] withColor:ccWHITE]];
+[[CCDirector sharedDirector] replaceScene:[CCTransitionFade transitionWithDuration:0.4 scene:[GameScene scene] withColor:ccWHITE]];
             
             
         } else {[self perdedor];}
@@ -1524,16 +1509,14 @@ bool m_useWeldJoint = true;
 - (void)rightSwipeHandle:(UISwipeGestureRecognizer*)gestureRecognizer  {if (noSeguir == false) {
     if (levelUsed != 1) {
         
-        [[CCDirector sharedDirector] replaceScene:[CCTransitionFade transitionWithDuration:0.4 scene:[GameScene scene] withColor:ccWHITE]];
         [[SimpleAudioEngine sharedEngine] playEffect:@"ganar.mp3"];
-        NSMutableArray* starter = [[NSMutableArray alloc]init];
+        NSMutableArray* starter = [[[NSMutableArray alloc]init] autorelease];
         [starter addObject:[NSNumber numberWithInt:levelUsed - 1]];
-        NSLog(@"previous level");
         [starter addObject:[NSNumber numberWithInt:levelHigh]];
         [[NSUserDefaults standardUserDefaults] setObject:[NSKeyedArchiver archivedDataWithRootObject:starter]
                                                   forKey:[NSString stringWithFormat:@"data"]];
         
-        NSMutableArray* starter2 = [[NSMutableArray alloc]init];
+        NSMutableArray* starter2 = [[[NSMutableArray alloc]init] autorelease];
         [starter2 addObject:[NSNumber numberWithFloat:0]];
         [starter2 addObject:[NSNumber numberWithFloat:0]];
         [starter2 addObject:[NSNumber numberWithInt:0]];
@@ -1543,7 +1526,7 @@ bool m_useWeldJoint = true;
         noSeguir = true;
         [timer invalidate];
         timer = nil;
-        [[CCDirector sharedDirector] replaceScene:[CCTransitionFade transitionWithDuration:0.4 scene:[GameScene scene] withColor:ccWHITE]];
+[[CCDirector sharedDirector] replaceScene:[CCTransitionFade transitionWithDuration:0.4 scene:[GameScene scene] withColor:ccWHITE]];
     } else {[self perdedor];}
     
 }}
@@ -1577,18 +1560,18 @@ bool m_useWeldJoint = true;
 
 -(void) gotoLevelMenu
 {
-    
-    [[CCDirector sharedDirector] replaceScene:[CCTransitionFade transitionWithDuration:0.5 scene:[MainScene node] ]];
+[[CCDirector sharedDirector] replaceScene:[CCTransitionFade transitionWithDuration:0.4 scene:[MainScene scene] withColor:ccWHITE]];
 }
 
 - (void) dealloc
 {
-	
-	NSLog(@"SALIENDO");
-    
+
     for (LHBezier* bez in [lh allBeziers]) {
         [bez removeSelf];
     }
+    
+    
+    [[CCDirector sharedDirector] purgeCachedData];
     
     [lh release];
     lh = nil;

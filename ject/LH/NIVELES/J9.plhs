@@ -374,7 +374,7 @@
 								<key>Position</key>
 								<string>{237.5947300195694, 2.1345240846276283}</string>
 								<key>Scale</key>
-								<string>{2.3902163505554199, 0.19595643877983093}</string>
+								<string>{3.0892674922943115, 0.19595643877983093}</string>
 								<key>SpriteSize</key>
 								<string>{205.5, 205.5}</string>
 								<key>Tag</key>
@@ -449,7 +449,7 @@
 								<key>Position</key>
 								<string>{237.5947300195694, 316.13452408462763}</string>
 								<key>Scale</key>
-								<string>{2.3902163505554199, 0.19595643877983093}</string>
+								<string>{3.4083099365234375, 0.19595643877983093}</string>
 								<key>SpriteSize</key>
 								<string>{205.5, 205.5}</string>
 								<key>Tag</key>
@@ -1527,7 +1527,7 @@
 		<key>CustomClasses</key>
 		<array/>
 		<key>Device</key>
-		<integer>0</integer>
+		<integer>2</integer>
 		<key>GameWorld</key>
 		<string>{{0, 0}, {480, 320}}</string>
 		<key>HDSuffix</key>
@@ -1537,11 +1537,11 @@
 		<key>PanValue</key>
 		<string>{907.02219189394145, -114.31901963409291}</string>
 		<key>ProjectName</key>
-		<string>CUPIDO</string>
+		<string></string>
 		<key>ProjectPath</key>
 		<string></string>
 		<key>SafeFrame</key>
-		<string>{480, 320}</string>
+		<string>{0, 0}</string>
 		<key>Tags</key>
 		<array>
 			<string>DEFAULT</string>

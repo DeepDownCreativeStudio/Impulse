@@ -12709,7 +12709,7 @@
 								<key>Frame</key>
 								<string>{{942, 4}, {155, 77}}</string>
 								<key>IsDrawable</key>
-								<true/>
+								<false/>
 								<key>IsExpanded</key>
 								<false/>
 								<key>IsRotated</key>

@@ -296,9 +296,9 @@
 								<key>Opacity</key>
 								<real>1</real>
 								<key>Position</key>
-								<string>{-2.5010677576065063, 166.01020082086325}</string>
+								<string>{-47.501067757606506, 166.01020082086325}</string>
 								<key>Scale</key>
-								<string>{1.5425686836242676, 0.11688759922981262}</string>
+								<string>{1.9746774435043335, 0.11688759922981262}</string>
 								<key>SpriteSize</key>
 								<string>{205.5, 205.5}</string>
 								<key>Tag</key>
@@ -519,7 +519,7 @@
 								<key>EndControlPoint</key>
 								<string>{285.55278837113246, 208.94311506631203}</string>
 								<key>EndPoint</key>
-								<string>{290, 208}</string>
+								<string>{290, 205.49415458738804}</string>
 								<key>StartControlPoint</key>
 								<string>{265.55278837113246, 208.94311506631203}</string>
 								<key>StartPoint</key>

@@ -387,6 +387,8 @@ static CCDirector *_sharedDirector = nil;
 	NSAssert( scene != nil, @"Argument must be non-nil");
 
 	NSUInteger index = [_scenesStack count];
+    
+    NSLog(@"scenes stack count %i", _scenesStack.count);
 
 	_sendCleanupToScene = YES;
 	[_scenesStack replaceObjectAtIndex:index-1 withObject:scene];

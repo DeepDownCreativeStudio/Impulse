@@ -275,9 +275,9 @@
 								<key>Opacity</key>
 								<real>1</real>
 								<key>Position</key>
-								<string>{137.2301826775074, 143.73704661056399}</string>
+								<string>{92.230182677507401, 143.73704661056399}</string>
 								<key>Scale</key>
-								<string>{1.3355735540390015, 0.23101748526096344}</string>
+								<string>{1.781083345413208, 0.23101748526096344}</string>
 								<key>SpriteSize</key>
 								<string>{205.5, 205.5}</string>
 								<key>Tag</key>
@@ -352,7 +352,7 @@
 								<key>Position</key>
 								<string>{235.88358354568481, 303.73704661056399}</string>
 								<key>Scale</key>
-								<string>{2.4514217376708984, 0.23101748526096344}</string>
+								<string>{3.5640308856964111, 0.23101748526096344}</string>
 								<key>SpriteSize</key>
 								<string>{205.5, 205.5}</string>
 								<key>Tag</key>
@@ -425,9 +425,9 @@
 								<key>Opacity</key>
 								<real>1</real>
 								<key>Position</key>
-								<string>{480.26295338943601, 203.88358354568481}</string>
+								<string>{498.46229297667742, 203.88358354568481}</string>
 								<key>Scale</key>
-								<string>{2.4514217376708984, 0.23101748526096344}</string>
+								<string>{2.4514217376708984, 0.35559812188148499}</string>
 								<key>SpriteSize</key>
 								<string>{205.5, 205.5}</string>
 								<key>Tag</key>
@@ -521,7 +521,7 @@
 		<key>CustomClasses</key>
 		<array/>
 		<key>Device</key>
-		<integer>0</integer>
+		<integer>2</integer>
 		<key>GameWorld</key>
 		<string>{{0, -1600}, {1920, 1920}}</string>
 		<key>HDSuffix</key>
@@ -531,11 +531,11 @@
 		<key>PanValue</key>
 		<string>{907.02219189394145, -114.31901963409291}</string>
 		<key>ProjectName</key>
-		<string>CUPIDO</string>
+		<string></string>
 		<key>ProjectPath</key>
 		<string></string>
 		<key>SafeFrame</key>
-		<string>{480, 320}</string>
+		<string>{0, 0}</string>
 		<key>Tags</key>
 		<array>
 			<string>DEFAULT</string>
@@ -543,6 +543,10 @@
 			<string>TAG_WIN</string>
 			<string>TAG_INVISIBLE</string>
 			<string>TAG_LOST</string>
+			<string>TAG_BROKEN</string>
+			<string>TAG_KEY</string>
+			<string>TAG_TELEPORT</string>
+			<string>TAG_DESIGN</string>
 		</array>
 		<key>ZoomValue</key>
 		<real>2.5515670776367188</real>

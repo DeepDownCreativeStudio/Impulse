@@ -326,6 +326,7 @@
 		3BFA6C8618BCF3AE004D8854 /* reset.png in Resources */ = {isa = PBXBuildFile; fileRef = 3BFA6C8318BCF3AE004D8854 /* reset.png */; };
 		3BFA6C8718BCF3AE004D8854 /* trackPath-hd.png in Resources */ = {isa = PBXBuildFile; fileRef = 3BFA6C8418BCF3AE004D8854 /* trackPath-hd.png */; };
 		3BFA6C8818BCF3AE004D8854 /* trackPath.png in Resources */ = {isa = PBXBuildFile; fileRef = 3BFA6C8518BCF3AE004D8854 /* trackPath.png */; };
+		8B1E05F21A9423A3009AD06E /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8B1E05F11A9423A3009AD06E /* Images.xcassets */; };
 		8B255D4118982CD8000D4BF0 /* J67.plhs in Resources */ = {isa = PBXBuildFile; fileRef = 8B255D2D18982CD8000D4BF0 /* J67.plhs */; };
 		8B255D4218982CD8000D4BF0 /* J68.plhs in Resources */ = {isa = PBXBuildFile; fileRef = 8B255D2E18982CD8000D4BF0 /* J68.plhs */; };
 		8B255D4318982CD8000D4BF0 /* J69.plhs in Resources */ = {isa = PBXBuildFile; fileRef = 8B255D2F18982CD8000D4BF0 /* J69.plhs */; };
@@ -1012,6 +1013,7 @@
 		3BFA6C8318BCF3AE004D8854 /* reset.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = reset.png; sourceTree = "<group>"; };
 		3BFA6C8418BCF3AE004D8854 /* trackPath-hd.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "trackPath-hd.png"; sourceTree = "<group>"; };
 		3BFA6C8518BCF3AE004D8854 /* trackPath.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = trackPath.png; sourceTree = "<group>"; };
+		8B1E05F11A9423A3009AD06E /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		8B255D2D18982CD8000D4BF0 /* J67.plhs */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = J67.plhs; sourceTree = "<group>"; };
 		8B255D2E18982CD8000D4BF0 /* J68.plhs */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = J68.plhs; sourceTree = "<group>"; };
 		8B255D2F18982CD8000D4BF0 /* J69.plhs */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = J69.plhs; sourceTree = "<group>"; };
@@ -1202,6 +1204,7 @@
 		3B6FC609175632D500733611 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				8B1E05F11A9423A3009AD06E /* Images.xcassets */,
 				3BFA6C8218BCF3AE004D8854 /* INGAME */,
 				3BFA6BF918BCF174004D8854 /* UI */,
 				3BFA6BDA18BCF04C004D8854 /* SOUNDS */,
@@ -1753,6 +1756,7 @@
 				8BD006C61A7F106500E3F086 /* GameScene */,
 				8BD006C51A7F105C00E3F086 /* MainScene */,
 				8BD006C71A7F106B00E3F086 /* IntroLayer */,
+				8BC273A31A937B4400A10259 /* AppDelegate */,
 				8BD006C91A7F109F00E3F086 /* Trash */,
 			);
 			name = Classes;
@@ -2130,6 +2134,15 @@
 			path = Resources/INGAME;
 			sourceTree = "<group>";
 		};
+		8BC273A31A937B4400A10259 /* AppDelegate */ = {
+			isa = PBXGroup;
+			children = (
+				3B6FC84A175633B100733611 /* GameAppDelegate.h */,
+				3B6FC84B175633B100733611 /* GameAppDelegate.mm */,
+			);
+			name = AppDelegate;
+			sourceTree = "<group>";
+		};
 		8BD006C51A7F105C00E3F086 /* MainScene */ = {
 			isa = PBXGroup;
 			children = (
@@ -2183,8 +2196,6 @@
 				3B6FC847175633B100733611 /* EndScene.mm */,
 				3B6FC848175633B100733611 /* FondoLayer.h */,
 				3B6FC849175633B100733611 /* FondoLayer.mm */,
-				3B6FC84A175633B100733611 /* GameAppDelegate.h */,
-				3B6FC84B175633B100733611 /* GameAppDelegate.mm */,
 				3B6FC84D175633B100733611 /* GameCenterManager.h */,
 				3B6FC84F175633B100733611 /* GameData.h */,
 				3B6FC850175633B100733611 /* GameData.m */,
@@ -2429,6 +2440,7 @@
 				8B255D4318982CD8000D4BF0 /* J69.plhs in Resources */,
 				8B740EF61893487C00FF680D /* J54.plhs in Resources */,
 				EF7153F517AB5D6B00EC7380 /* special_special-hd.png in Resources */,
+				8B1E05F21A9423A3009AD06E /* Images.xcassets in Resources */,
 				EF7153F617AB5D6B00EC7380 /* special_special.png in Resources */,
 				3BFA6C3618BCF174004D8854 /* boton-facebook-hd.png in Resources */,
 				8BF1990E186D394F008AF03A /* design_design-hd.png in Resources */,
@@ -2761,6 +2773,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = YES;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_IDENTITY = "iPhone Developer: Federico Bustos Fierro (747XPT5D8A)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Federico Bustos Fierro (747XPT5D8A)";
 				COPY_PHASE_STRIP = NO;
@@ -2797,6 +2811,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = YES;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_IDENTITY = "iPhone Developer: Federico Bustos Fierro (747XPT5D8A)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Federico Bustos Fierro (747XPT5D8A)";
 				COPY_PHASE_STRIP = YES;

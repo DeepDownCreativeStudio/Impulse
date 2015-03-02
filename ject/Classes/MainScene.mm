@@ -109,8 +109,6 @@ const int32 MAXIMUM_NUMBER_OF_STEPS = 25;
         levelUsed = [[arrayData objectAtIndex:0] intValue];
         levelHigh = [[arrayData objectAtIndex:1] intValue];
         self.arrStars = [NSKeyedUnarchiver unarchiveObjectWithData:arrData];
-        NSLog(@"retrieve data");
-        NSLog(@"arrStars count %i",self.arrStars.count);
         
     } else {
         
@@ -130,6 +128,8 @@ const int32 MAXIMUM_NUMBER_OF_STEPS = 25;
                                                   forKey:[NSString stringWithFormat:@"stars"]];
         self.arrStars = starterStars;
     }
+    
+    levelHigh = 100;
 }
 
 - (void) first {
@@ -145,8 +145,7 @@ const int32 MAXIMUM_NUMBER_OF_STEPS = 25;
     }
         LHSprite * iner = [lh spriteWithUniqueName:@"point_0"];
         float mehr = [self selfScreen].size.height - 480;
-        [iner transformPosition:ccp(mehr + iner.position.x -150 * (levelUsed - 1), iner.position.y)];
-                        NSLog(@"arrStars count %i",self.arrStars.count);
+        [iner transformPosition:ccp(-mehr + iner.position.x -150 * (levelUsed - 1), iner.position.y)];
         for (LHSprite* spr in [lh spritesWithTag:TAG_LOST]) {
             if (spr.zOrder != -2) {
                 NSString* numStr = [spr.uniqueName stringByReplacingOccurrencesOfString:@"point_"
@@ -198,7 +197,7 @@ const int32 MAXIMUM_NUMBER_OF_STEPS = 25;
             int level = [numStr integerValue];
             level++;
             if (level > levelHigh) {
-                spr.color = ccGRAY;
+                spr.color = ccBLACKBLUE;
             }
         }
     }
@@ -318,7 +317,7 @@ const int32 MAXIMUM_NUMBER_OF_STEPS = 25;
     nextLevel++;
     [numberLabel setString:[NSString stringWithFormat:@"%i",nextLevel]];
     if (nextLevel<= levelHigh) {numberLabel.color = ccWHITE;}
-    else {numberLabel.color = ccYELLOW;}
+    else {numberLabel.color = ccBLACK;}
     
     //CUADRADOS
     
@@ -472,7 +471,7 @@ const int32 MAXIMUM_NUMBER_OF_STEPS = 25;
         
     }
 }
-////////////////////////////////////////////////////////////////////////////////
+
 - (void)ccTouchesEnded:(NSSet *)touches withEvent:(UIEvent *)event
 {
     if (act) {
@@ -491,7 +490,6 @@ const int32 MAXIMUM_NUMBER_OF_STEPS = 25;
                                                                                   withString:@""];
                     int nextLevel = [numStr integerValue];
                     nextLevel++;
-                    NSLog(@"CHANGE TO %i, highest level achieved %i", nextLevel, levelHigh);
                     if (nextLevel<=levelHigh) {
                     [self goTo:nextLevel];
                     }
@@ -506,7 +504,6 @@ const int32 MAXIMUM_NUMBER_OF_STEPS = 25;
         if (CGRectContainsPoint([[lh spriteWithUniqueName:@"point_0"] boundingBox],location)) {
             
             [self goTo:1];
-            NSLog(@"CHANGE TO 1");
         }
     }
     }
@@ -536,48 +533,6 @@ const int32 MAXIMUM_NUMBER_OF_STEPS = 25;
      [[SimpleAudioEngine sharedEngine] playEffect:@"ganar.mp3"];
     [[CCDirector sharedDirector] replaceScene:[CCTransitionFade transitionWithDuration:0.4 scene:[GameScene scene] withColor:ccWHITE]];
 }
-////////////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////
-- (void)accelerometer:(UIAccelerometer*)accelerometer didAccelerate:(UIAcceleration*)acceleration
-{	
-	// static float prevX=0, prevY=0;
-	
-	//#define kFilterFactor 1.0f
-	
-    float pi = 3.14159265589793f;
-    
-	// float accelX = (float) acceleration.x * kFilterFactor + (1- kFilterFactor)*prevX;
-	// float accelY = (float) acceleration.y * kFilterFactor + (1- kFilterFactor)*prevY;
-    
-	float accelX = (float) acceleration.x;
-	float accelY = (float) acceleration.y;
-    
-    double currentRawReading = atan2(accelY, accelX);
-    currentRawReading = currentRawReading * 180/pi;
-    //NSLog(@"VALOR %f", currentRawReading);
-    
-    
-    //	prevX = accelX;
-    //	prevY = accelY;
-	
-	// accelerometer values are in "Portrait" mode. Change them to Landscape left
-	// multiply the gravity by 10
-    
-	// 0.5
-	//
-	//
-	
-	if (!((accelX<0.05 and accelX > -0.05) and (accelY<0.25 and accelY > -0.25))) 
-	{
-		b2Vec2 gravity( -accelX *-24, accelY *24);
-
-	}
-    
-    CGFloat RotateAngle = -ccpToAngle(ccp(-accelX * 22, accelY * 22));
-    RotateAngle = CC_RADIANS_TO_DEGREES(RotateAngle);
-    [ball setRotation:RotateAngle];
-	
-}
 
 
 -(void) retrieveRequiredObjects {
@@ -595,7 +550,8 @@ const int32 MAXIMUM_NUMBER_OF_STEPS = 25;
 	world = NULL;
 	
   	delete m_debugDraw;
-
+    [[CCDirector sharedDirector] purgeCachedData];
+    
 	// don't forget to call "super dealloc"
 	[super dealloc];
 }
